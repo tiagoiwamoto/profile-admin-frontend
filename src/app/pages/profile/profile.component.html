@@ -1,0 +1,92 @@
+<div class="text-center" *ngIf="loadingPage">
+  <p-progressSpinner></p-progressSpinner>
+  <p>Carregando...</p>
+</div>
+
+<p-toolbar>
+  <div class="p-toolbar-group-left">
+    <div class="mr-3">Perfis</div>
+    <p-button (click)="createNewProfile()" icon="pi pi-plus"></p-button>
+    <p-button (click)="loadReloadRecords()" class="ml-2" icon="pi pi-refresh"></p-button>
+  </div>
+
+  <div class="p-toolbar-group-right">
+    <p-button icon="pi pi-save" styleClass="p-button-danger"></p-button>
+  </div>
+</p-toolbar>
+
+<div class="grid">
+  <div class="col-12 md:col-4 mb-3 ml-2 mr-2 mt-2" *ngFor="let profile of records">
+    <p-card [header]="'Perfil: ' + profile.id">
+      <p><p-tag>Título: {{profile.title}}</p-tag></p>
+      <p><p-tag>SubTítulo: {{profile.subTitle}}</p-tag></p>
+      <p><p-tag severity="info">Email: {{profile.email}}</p-tag></p>
+      <p><p-tag severity="info">Telefone: {{profile.phone}}</p-tag></p>
+      <hr />
+      <p>Descrição</p>
+      <p>{{profile.description}}</p>
+      <div class="text-right">
+        <p-tag severity="info">Data de criação: {{profile.createdAt | date: 'dd/MM/yyyy'}}</p-tag>
+        <p-tag severity="info" class="ml-2">Data de atualização: {{profile.updatedAt | date: 'dd/MM/yyyy'}}</p-tag>
+        <p-tag severity="info" class="ml-2" *ngIf="profile.isActive">Ativo</p-tag>
+      </div>
+      <ng-template pTemplate="footer">
+        <div class="text-right">
+          <p-button label="Excluir" (click)="deleteRecord(profile)" class="mr-2" icon="pi pi-trash" styleClass="p-button p-button-danger"></p-button>
+          <button (click)="editProfile(profile)" pButton type="button" label="Editar" ></button>
+        </div>
+      </ng-template>
+    </p-card>
+  </div>
+</div>
+
+<p-dialog [(visible)]="formDisplay" [maximizable]="true" [closeOnEscape]="true" [modal]="true"
+          [breakpoints]="{'960px': '75vw'}" [style]="{width: '50vw'}">
+  <div class="text-center" *ngIf="loadingDialog">
+    <p-progressSpinner></p-progressSpinner>
+  </div>
+  <ng-template *ngIf="!loadingDialog" pTemplate="header">
+    {{record.id === undefined ? 'Novo Profile' : 'Alterar Profile'}}
+  </ng-template>
+  <div *ngIf="!loadingDialog">
+    <div class="field">
+      <label for="name" class="block">Nome</label>
+      <input required="true" id="name" type="text" style="width: 100%" aria-describedby="name-help" pInputText [(ngModel)]="record.name" />
+      <small id="name-help" *ngIf="record?.name?.length < 1" class="block">Informe seu nome completo.</small>
+    </div>
+    <div class="field">
+      <label for="title" class="block">Titulo</label>
+      <input id="title" style="width: 100%" type="text" aria-describedby="title-help" pInputText [(ngModel)]="record.title" />
+      <small id="title-help" class="block">Informe um titulo..</small>
+    </div>
+    <div class="field">
+      <label for="subTitle" class="block">Sub titulo</label>
+      <input id="subTitle" style="width: 100%" type="text" aria-describedby="subTitle-help" pInputText [(ngModel)]="record.subTitle" />
+      <small id="subTitle-help" class="block">Informe qual um sub titulo..</small>
+    </div>
+    <div class="field">
+      <label for="email" class="block">Email</label>
+      <input id="email" style="width: 100%" type="email" aria-describedby="email-help" pInputText [(ngModel)]="record.email" />
+      <small id="email-help" class="block">Informe um email válido..</small>
+    </div>
+    <div class="field">
+      <label for="phone" class="block">Telefone</label>
+      <input id="phone" style="width: 100%" type="text" aria-describedby="phone-help" pInputText [(ngModel)]="record.phone" />
+      <small id="phone-help" class="block">Informe um telefone válido..</small>
+    </div>
+    <div class="field-checkbox">
+      <p-checkbox id="isActive" [(ngModel)]="record.isActive" [binary]="true" inputId="isActive"></p-checkbox>
+      <label for="isActive">Perfil ativo ?</label>
+    </div>
+    <span class="p-float-label mt-4">
+      <textarea id="description" style="width: 100%" [(ngModel)]="record.description" pInputTextarea></textarea>
+      <label for="description">Descrição</label>
+    </span>
+  </div>
+
+  <ng-template *ngIf="!loadingDialog" pTemplate="footer" class="text-right">
+    <button (click)="save()" pButton type="button" label="Salvar" ></button>
+  </ng-template>
+</p-dialog>
+<p-confirmDialog header="Confirma remoção ?" icon="pi pi-exclamation-triangle" [breakpoints]="{'960px': '75vw', '640px': '100vw'}" [style]="{width: '50vw'}"></p-confirmDialog>
+<p-toast></p-toast>

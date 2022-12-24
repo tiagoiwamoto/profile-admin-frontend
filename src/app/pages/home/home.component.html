@@ -1,0 +1,49 @@
+<h1>Admin Profile</h1>
+
+<hr />
+
+<a routerLink="/profiles">Profiles</a> |
+<a routerLink="/scholarity">Escolaridade</a> |
+<a routerLink="/">Home</a>
+
+<hr />
+
+<button *ngIf="isLoggedIn" type="button" (click)="logout()">Log out</button>
+<button *ngIf="!isLoggedIn" type="button" (click)="login()">Log in</button>
+
+<p-card *ngIf="userProfile">
+  <ng-template pTemplate="header">
+    Header content here
+  </ng-template>
+  <table>
+    <tr *ngIf="userProfile.username">
+      <th scope="row">Username</th>
+      <td>{{ userProfile.username }}</td>
+    </tr>
+    <tr *ngIf="userProfile.firstName">
+      <th scope="row">First name</th>
+      <td>{{ userProfile.firstName }}</td>
+    </tr>
+    <tr *ngIf="userProfile.lastName">
+      <th scope="row">First name</th>
+      <td>{{ userProfile.lastName }}</td>
+    </tr>
+    <tr *ngIf="userProfile.email">
+      <th scope="row">E-mail</th>
+      <td>{{ userProfile.email }}</td>
+    </tr>
+    <tr>
+      <th scope="row">E-mail verified</th>
+      <td>{{ userProfile.emailVerified ? 'Yes' : 'No' }}</td>
+    </tr>
+    <tr *ngIf="token">
+      <th scope="row">Token</th>
+      <td>{{ token }}</td>
+    </tr>
+  </table>
+  <ng-template pTemplate="footer">
+    Footer content here
+  </ng-template>
+</p-card>
+
+

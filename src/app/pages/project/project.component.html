@@ -1,0 +1,67 @@
+<p-table [value]="projects">
+  <ng-template pTemplate="caption">
+    <div class="flex align-items-center justify-content-between">
+      Projetos
+      <div class="p-toolbar-group-right">
+        <p-button (click)="createNewRecord()" icon="pi pi-plus"></p-button>
+        <p-button (click)="loadReloadRecords()" class="ml-2" icon="pi pi-refresh"></p-button>
+      </div>
+
+    </div>
+  </ng-template>
+  <ng-template pTemplate="header">
+    <tr>
+      <th></th>
+      <th>Nome</th>
+      <th>Descrição</th>
+      <th>Url</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-project>
+    <tr>
+      <td>
+        <div class="sizes">
+          <p-button label="Editar" (click)="editRecord(project)" icon="pi pi-check" styleClass="p-button-sm"></p-button>
+          <p-button label="Excluir" (click)="removeRecord($event, project)" class="ml-2" icon="pi pi-trash" styleClass="p-button-sm p-button-danger"></p-button>
+          <p-confirmPopup></p-confirmPopup>
+          <p-toast></p-toast>
+        </div>
+      </td>
+      <td>{{project.name}}</td>
+      <td>{{project.description}}</td>
+      <td><a [href]="project.url" target="_blank" pButton pRipple class="p-button-link">URL</a></td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="summary">
+    <div class="flex align-items-center justify-content-between">
+      Total de registros {{projects ? projects.length : 0 }}.
+    </div>
+  </ng-template>
+</p-table>
+
+<!-- Conteúdo -->
+
+<p-dialog [(visible)]="formDisplay" [maximizable]="true" [closeOnEscape]="true" [modal]="true"
+          [breakpoints]="{'960px': '75vw'}" [style]="{width: '50vw'}">
+  <ng-template pTemplate="header">
+    {{project.id === undefined ? 'Novo registro' : 'Alterar registro'}}
+  </ng-template>
+  <div class="field">
+    <label for="name" class="block">Nome</label>
+    <input id="name" type="text" style="width: 100%" aria-describedby="name-help" pInputText [(ngModel)]="project.name" />
+  </div>
+  <div class="field">
+    <span class="p-float-label mt-4">
+      <textarea id="description" style="width: 100%" [(ngModel)]="project.description" pInputTextarea></textarea>
+      <label for="description">Descrição</label>
+    </span>
+  </div>
+  <div class="field">
+    <label for="url" class="block">Url</label>
+    <input id="url" type="text" style="width: 100%" aria-describedby="url-help" pInputText [(ngModel)]="project.url" />
+  </div>
+
+  <ng-template pTemplate="footer" class="text-right">
+    <button (click)="save()" pButton type="button" label="Salvar" ></button>
+  </ng-template>
+</p-dialog>

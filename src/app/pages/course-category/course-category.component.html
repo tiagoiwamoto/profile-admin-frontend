@@ -1,0 +1,62 @@
+<p-table [value]="records">
+  <ng-template pTemplate="caption">
+    <div class="flex align-items-center justify-content-between">
+      Categoria de cursos
+      <div class="p-toolbar-group-right">
+        <p-button (click)="createNewRecord()" icon="pi pi-plus"></p-button>
+        <p-button (click)="loadReloadRecords()" class="ml-2" icon="pi pi-refresh"></p-button>
+      </div>
+
+    </div>
+  </ng-template>
+  <ng-template pTemplate="header">
+    <tr>
+      <th></th>
+      <th>Nome</th>
+      <th>Descrição</th>
+      <th>Data de atualização</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-courseCategory>
+    <tr>
+      <td>
+        <div class="sizes">
+          <p-button label="Editar" (click)="editRecord(courseCategory)" icon="pi pi-check" styleClass="p-button-sm"></p-button>
+          <a [routerLink]="['/courses', courseCategory.uuid]" label="Cursos" icon="pi pi-angle-right" pButton style="text-decoration: none" class="p-button-sm ml-2"></a>
+          <p-button label="Excluir" (click)="deleteRecord(courseCategory)" class="ml-2" icon="pi pi-trash" styleClass="p-button-sm p-button-danger"></p-button>
+        </div>
+      </td>
+      <td>{{courseCategory.name}}</td>
+      <td>{{courseCategory.description}}</td>
+      <td>{{courseCategory.updatedAt | date: 'dd/MM/yyyy'}}</td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="summary">
+    <div class="flex align-items-center justify-content-between">
+      Total de registros {{records ? records.length : 0 }}.
+    </div>
+  </ng-template>
+</p-table>
+
+<!-- Conteúdo -->
+
+<p-dialog [(visible)]="formDisplay" [maximizable]="true" [closeOnEscape]="true" [modal]="true"
+          [breakpoints]="{'960px': '75vw'}" [style]="{width: '50vw'}">
+  <ng-template pTemplate="header">
+    {{record.id === undefined ? 'Novo registro' : 'Alterar registro'}}
+  </ng-template>
+  <div class="field">
+    <label for="name" class="block">Nome</label>
+    <input id="name" type="text" style="width: 100%" aria-describedby="name-help" pInputText [(ngModel)]="record.name" />
+  </div>
+  <div class="field">
+    <label for="description" class="block">Descrição</label>
+    <input id="description" type="text" style="width: 100%" aria-describedby="description-help" pInputText [(ngModel)]="record.description" />
+  </div>
+
+  <ng-template pTemplate="footer" class="text-right">
+    <button (click)="save()" pButton type="button" label="Salvar" ></button>
+  </ng-template>
+</p-dialog>
+<p-confirmDialog header="Confirma remoção ?" icon="pi pi-exclamation-triangle" [breakpoints]="{'960px': '75vw', '640px': '100vw'}" [style]="{width: '50vw'}"></p-confirmDialog>
+<p-toast></p-toast>

@@ -1,0 +1,83 @@
+<p-table [value]="resumes">
+  <ng-template pTemplate="caption">
+    <div class="flex align-items-center justify-content-between">
+      Curriculuns
+      <div class="p-toolbar-group-right">
+        <p-button (click)="createNewRecord()" icon="pi pi-plus"></p-button>
+        <p-button (click)="loadReloadRecords()" class="ml-2" icon="pi pi-refresh"></p-button>
+      </div>
+
+    </div>
+  </ng-template>
+  <ng-template pTemplate="header">
+    <tr>
+      <th></th>
+      <th>Titulo</th>
+      <th>Idioma</th>
+      <th>Tipo</th>
+      <th>Url</th>
+      <th>Data de Atualização</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-resume>
+    <tr>
+      <td>
+        <div class="sizes">
+          <p-button label="Editar" (click)="editRecord(resume)" icon="pi pi-check" styleClass="p-button-sm"></p-button>
+          <p-button label="Excluir" (click)="removeRecord($event, resume)" class="ml-2" icon="pi pi-trash" styleClass="p-button-sm p-button-danger"></p-button>
+          <p-confirmPopup></p-confirmPopup>
+          <p-toast></p-toast>
+        </div>
+      </td>
+      <td>{{resume.title}}</td>
+      <td><p-chip styleClass="mr-2 custom-chip">{{resume.language}}</p-chip></td>
+      <td><p-chip styleClass="mr-2 custom-chip">{{resume.type}}</p-chip></td>
+      <td><a [href]="resume.url" target="_blank" pButton pRipple class="p-button-link">URL</a></td>
+      <td>{{resume.updatedAt | date: 'dd/MM/yyyy'}}</td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="summary">
+    <div class="flex align-items-center justify-content-between">
+      Total de registros {{resumes ? resumes.length : 0 }}.
+    </div>
+  </ng-template>
+</p-table>
+
+<!-- Conteúdo -->
+
+<p-dialog [(visible)]="formDisplay" [maximizable]="true" [closeOnEscape]="true" [modal]="true"
+          [breakpoints]="{'960px': '75vw'}" [style]="{width: '50vw'}">
+  <ng-template pTemplate="header">
+    {{resume.id === undefined ? 'Novo registro' : 'Alterar registro'}}
+  </ng-template>
+  <div class="field">
+    <label for="title" class="block">Titulo</label>
+    <input id="title" type="text" style="width: 100%" aria-describedby="title-help" pInputText [(ngModel)]="resume.title" />
+  </div>
+  <div class="field">
+    <label for="description" class="block">Descrição</label>
+    <input id="description" type="text" style="width: 100%" aria-describedby="description-help" pInputText [(ngModel)]="resume.description" />
+  </div>
+  <div class="field">
+    <label for="language" class="block">Idioma</label>
+    <input id="language" type="text" style="width: 100%" aria-describedby="language-help" pInputText [(ngModel)]="resume.language" />
+  </div>
+  <div class="field">
+    <label for="type" class="block">Tipo</label>
+    <input id="type" type="text" style="width: 100%" aria-describedby="type-help" pInputText [(ngModel)]="resume.type" />
+  </div>
+  <div class="field">
+    <label for="url" class="block">URL</label>
+    <input id="url" type="text" style="width: 100%" aria-describedby="url-help" pInputText [(ngModel)]="resume.url" />
+  </div>
+  <div class="field">
+    <span class="p-float-label mt-4">
+      <textarea id="embed" style="width: 100%" [(ngModel)]="resume.embed" pInputTextarea></textarea>
+      <label for="embed">Embed</label>
+    </span>
+  </div>
+
+  <ng-template pTemplate="footer" class="text-right">
+    <button (click)="save()" pButton type="button" label="Salvar" ></button>
+  </ng-template>
+</p-dialog>

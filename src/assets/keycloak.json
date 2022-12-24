@@ -1,0 +1,12 @@
+{
+  "realm": "profile-admin",
+  "auth-server-url": "http://localhost:28080/",
+  "ssl-required": "external",
+  "resource": "web-app",
+  "verify-token-audience": true,
+  "credentials": {
+    "secret": "zw19gI0SPWJMo4sRPvHs4E6HJ9iwoFfB"
+  },
+  "confidential-port": 0,
+  "policy-enforcer": {}
+}
