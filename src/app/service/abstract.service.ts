@@ -4,7 +4,6 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {ConfirmationService, MessageService} from "primeng/api";
 import {Observable} from "rxjs";
 import {AbstractInterface} from "../model/abstract.interface";
-import {CertificationInterface} from "../model/certification.interface";
 
 @Injectable({
   providedIn: 'root'

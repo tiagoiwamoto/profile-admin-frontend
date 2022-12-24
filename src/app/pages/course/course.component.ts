@@ -1,41 +1,31 @@
 import {Component, OnInit} from '@angular/core';
-import {environment} from "../../../environments/environment";
-import {HttpClient} from "@angular/common/http";
 import {ConfirmationService, MessageService} from "primeng/api";
 import * as moment from "moment/moment";
 import {CourseInterface} from "../../model/course.interface";
-import {FileUpload} from "primeng/fileupload";
 import {ActivatedRoute} from "@angular/router";
 import {CourseCategoryInterface} from "../../model/course_category.interface";
 import {AbstractService} from "../../service/abstract.service";
-import {CertificationInterface} from "../../model/certification.interface";
+import {AbstractUsecaseFile} from "../../usecase/abstract-usecase-file.service";
 
 @Component({
   selector: 'app-course',
   templateUrl: './course.component.html',
   styleUrls: ['./course.component.css']
 })
-export class CourseComponent implements OnInit {
+export class CourseComponent extends AbstractUsecaseFile<CourseInterface> implements OnInit {
 
-
-  records: CourseInterface[] | any = [];
-  record: CourseInterface | any = {};
   courseCategory: CourseCategoryInterface | any = {};
   courseCategoryUuid: string | any = '';
-  file: any;
-  loadingPage = false;
-  loadingDialog = false;
-  formDisplay = false;
-  server = environment.server;
-  path = '/courses/'
-  fileUpload: any;
+  override path = '/courses/'
 
-  constructor(private confirmationService: ConfirmationService,
-              private messageService: MessageService,
-              private route: ActivatedRoute,
-              private service: AbstractService) { }
+  constructor(confirmationService: ConfirmationService,
+              messageService: MessageService,
+              service: AbstractService,
+              private route: ActivatedRoute) {
+  super(confirmationService, messageService, service);
+}
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.route.params.subscribe(params => {
       this.courseCategoryUuid = params['uuid'];
 
@@ -45,16 +35,7 @@ export class CourseComponent implements OnInit {
     });
   }
 
-  createNewRecord(){
-    this.record = {};
-    this.file = [];
-    if(this.fileUpload){
-      this.fileUpload.clear();
-    }
-    this.formDisplaySwitch();
-  }
-
-  editRecord(course: CourseInterface){
+  override editRecord(course: CourseInterface){
     this.file = [];
     if(this.fileUpload){
       this.fileUpload.clear();
@@ -65,7 +46,7 @@ export class CourseComponent implements OnInit {
     this.formDisplaySwitch();
   }
 
-  async loadReloadRecords(){
+  override async loadReloadRecords(){
     this.loadingPage = true;
     await this.service.loadReloadRecords(this.path.concat(this.courseCategoryUuid)).subscribe({
       next: (data) => {
@@ -85,15 +66,7 @@ export class CourseComponent implements OnInit {
     });
   }
 
-  formDisplaySwitch(){
-    if(this.formDisplay){
-      this.formDisplay = false;
-    }else{
-      this.formDisplay = true;
-    }
-  }
-
-  save(){
+  saveRecord(){
     const formData = new FormData();
     const startDateMoment = moment(this.record.startDate, 'DD/MM/YYYY');
     const endDateMoment = moment(this.record.endDate, 'DD/MM/YYYY');
@@ -107,44 +80,8 @@ export class CourseComponent implements OnInit {
     formData.append("startDate", startDate);
     formData.append("endDate", endDate);
     formData.append("courseCategoryUuid", this.courseCategory.uuid);
+    this.saveForm(formData, this.record);
 
-    this.service.saveForm(formData, this.record, this.path).subscribe({
-      next: (data) => {
-        this.formDisplaySwitch();
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Aviso',
-          detail: 'Solicitação executada com sucesso !'
-        });
-        this.loadReloadRecords();
-        this.loadingDialog = false;
-      },
-      error: (error) => console.log(error)
-    })
-
-  }
-
-  deleteRecord(course: CourseInterface) {
-    this.confirmationService.confirm({
-      message: 'Deseja realmente excluir ?',
-      accept: () => {
-        this.loadingPage = true;
-        this.service.deleteRecord(course, this.path).subscribe({
-            next: (data) => {
-              this.loadingPage = false;
-              this.messageService.add({severity: 'success', summary: 'Completed', detail: 'Curso removido com sucesso'});
-              this.loadReloadRecords();
-            },
-            error: (error) => this.messageService.add({severity: 'error', summary: 'Aviso', detail: 'Falha ao remover curso'})
-          }
-        )
-      }
-    });
-  }
-
-  setFile(file: any, fileUpload: FileUpload){
-    this.fileUpload = fileUpload;
-    this.file = file.files[0];
   }
 
 }

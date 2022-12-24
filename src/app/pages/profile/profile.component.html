@@ -6,7 +6,7 @@
 <p-toolbar>
   <div class="p-toolbar-group-left">
     <div class="mr-3">Perfis</div>
-    <p-button (click)="createNewProfile()" icon="pi pi-plus"></p-button>
+    <p-button (click)="createNewRecord()" icon="pi pi-plus"></p-button>
     <p-button (click)="loadReloadRecords()" class="ml-2" icon="pi pi-refresh"></p-button>
   </div>
 
@@ -33,7 +33,7 @@
       <ng-template pTemplate="footer">
         <div class="text-right">
           <p-button label="Excluir" (click)="deleteRecord(profile)" class="mr-2" icon="pi pi-trash" styleClass="p-button p-button-danger"></p-button>
-          <button (click)="editProfile(profile)" pButton type="button" label="Editar" ></button>
+          <button (click)="editRecord(profile)" pButton type="button" label="Editar" ></button>
         </div>
       </ng-template>
     </p-card>

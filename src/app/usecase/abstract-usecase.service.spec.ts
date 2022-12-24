@@ -1,13 +1,13 @@
 import {TestBed} from '@angular/core/testing';
 
-import {AbstractService} from './abstract.service';
+import {AbstractUsecase} from './abstract-usecase.service';
 
-describe('AbstractService', () => {
-  let service: AbstractService;
+describe('AbstractUsecaseService', () => {
+  let service: AbstractUsecase;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(AbstractService);
+    service = TestBed.inject(AbstractUsecase);
   });
 
   it('should be created', () => {
