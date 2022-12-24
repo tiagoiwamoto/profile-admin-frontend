@@ -1,4 +1,4 @@
-<p-table [value]="softwares">
+<p-table [value]="records">
   <ng-template pTemplate="caption">
     <div class="flex align-items-center justify-content-between">
       Softwares
@@ -24,9 +24,7 @@
       <td>
         <div class="sizes">
           <p-button label="Editar" (click)="editRecord(software)" icon="pi pi-check" styleClass="p-button-sm"></p-button>
-          <p-button label="Excluir" (click)="deleteRecord($event, software)" class="ml-2" icon="pi pi-trash" styleClass="p-button-sm p-button-danger"></p-button>
-          <p-confirmPopup></p-confirmPopup>
-          <p-toast></p-toast>
+          <p-button label="Excluir" (click)="deleteRecord(software)" class="ml-2" icon="pi pi-trash" styleClass="p-button-sm p-button-danger"></p-button>
         </div>
       </td>
       <td><img [src]="server + '/files/softwares/'+ software.uuid + '/' + software.pathOfImageThumb" width="100" class="shadow-4" /></td>
@@ -38,7 +36,7 @@
   </ng-template>
   <ng-template pTemplate="summary">
     <div class="flex align-items-center justify-content-between">
-      Total de registros {{softwares ? softwares.length : 0 }}.
+      Total de registros {{records ? records.length : 0 }}.
     </div>
   </ng-template>
 </p-table>
@@ -47,35 +45,42 @@
 
 <p-dialog [(visible)]="formDisplay" [maximizable]="true" [closeOnEscape]="true" [modal]="true"
           [breakpoints]="{'960px': '75vw'}" [style]="{width: '50vw'}">
-  <ng-template pTemplate="header">
-    {{software.id === undefined ? 'Novo registro' : 'Alterar registro'}}
+  <div class="text-center" *ngIf="loadingDialog">
+    <p-progressSpinner></p-progressSpinner>
+  </div>
+  <ng-template *ngIf="!loadingDialog" pTemplate="header">
+    {{record.id === undefined ? 'Novo registro' : 'Alterar registro'}}
   </ng-template>
-  <div class="field">
-    <label for="name" class="block">Nome</label>
-    <input id="name" type="text" style="width: 100%" aria-describedby="name-help" pInputText [(ngModel)]="software.name" />
+  <div *ngIf="!loadingDialog">
+    <div class="field">
+      <label for="name" class="block">Nome</label>
+      <input id="name" type="text" style="width: 100%" aria-describedby="name-help" pInputText [(ngModel)]="record.name" />
+    </div>
+    <div class="field">
+      <label for="description" class="block">Descrição</label>
+      <input id="description" type="text" style="width: 100%" aria-describedby="description-help" pInputText [(ngModel)]="record.description" />
+    </div>
+    <div class="field">
+      <label for="url" class="block">Url</label>
+      <input id="url" type="text" style="width: 100%" aria-describedby="url-help" pInputText [(ngModel)]="record.url" />
+    </div>
+    <div class="field">
+      <label for="mirrorUrl" class="block">Mirror</label>
+      <input id="mirrorUrl" type="text" style="width: 100%" aria-describedby="mirrorUrl-help" pInputText [(ngModel)]="record.mirrorUrl" />
+    </div>
+    <p-fileUpload #fileUpload name="file" (onSelect)="setFile($event, fileUpload)"
+                  accept="image/*" [maxFileSize]="1000000" [showUploadButton]="false" [showCancelButton]="false" [chooseLabel]="'Selecionar arquivo'">
+      <ng-template pTemplate="content">
+        <img *ngIf="record.id" [src]="server + '/files/softwares/'+ record.uuid + '/' + record.pathOfImageThumb" height="80" />
+        <ul *ngIf="file?.target?.length">
+          <li *ngFor="let file of file?.target?.files">{{file.name}} - {{file.size}} bytes</li>
+        </ul>
+      </ng-template>
+    </p-fileUpload>
   </div>
-  <div class="field">
-    <label for="description" class="block">Descrição</label>
-    <input id="description" type="text" style="width: 100%" aria-describedby="description-help" pInputText [(ngModel)]="software.description" />
-  </div>
-  <div class="field">
-    <label for="url" class="block">Url</label>
-    <input id="url" type="text" style="width: 100%" aria-describedby="url-help" pInputText [(ngModel)]="software.url" />
-  </div>
-  <div class="field">
-    <label for="mirrorUrl" class="block">Mirror</label>
-    <input id="mirrorUrl" type="text" style="width: 100%" aria-describedby="mirrorUrl-help" pInputText [(ngModel)]="software.mirrorUrl" />
-  </div>
-  <p-fileUpload #fileUpload name="file" (onSelect)="setFile($event, fileUpload)"
-                accept="image/*" [maxFileSize]="1000000" [showUploadButton]="false" [showCancelButton]="false" [chooseLabel]="'Selecionar arquivo'">
-    <ng-template pTemplate="content">
-      <img *ngIf="software.id" [src]="server + '/files/softwares/'+ software.uuid + '/' + software.pathOfImageThumb" height="80" />
-      <ul *ngIf="file?.target?.length">
-        <li *ngFor="let file of file?.target?.files">{{file.name}} - {{file.size}} bytes</li>
-      </ul>
-    </ng-template>
-  </p-fileUpload>
-  <ng-template pTemplate="footer" class="text-right">
+  <ng-template *ngIf="!loadingDialog" pTemplate="footer" class="text-right">
     <button (click)="save()" pButton type="button" label="Salvar" ></button>
   </ng-template>
 </p-dialog>
+<p-confirmDialog header="Confirma remoção ?" icon="pi pi-exclamation-triangle" [breakpoints]="{'960px': '75vw', '640px': '100vw'}" [style]="{width: '50vw'}"></p-confirmDialog>
+<p-toast></p-toast>

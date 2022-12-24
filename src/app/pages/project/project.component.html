@@ -1,4 +1,4 @@
-<p-table [value]="projects">
+<p-table [value]="records">
   <ng-template pTemplate="caption">
     <div class="flex align-items-center justify-content-between">
       Projetos
@@ -22,9 +22,7 @@
       <td>
         <div class="sizes">
           <p-button label="Editar" (click)="editRecord(project)" icon="pi pi-check" styleClass="p-button-sm"></p-button>
-          <p-button label="Excluir" (click)="removeRecord($event, project)" class="ml-2" icon="pi pi-trash" styleClass="p-button-sm p-button-danger"></p-button>
-          <p-confirmPopup></p-confirmPopup>
-          <p-toast></p-toast>
+          <p-button label="Excluir" (click)="deleteRecord(project)" class="ml-2" icon="pi pi-trash" styleClass="p-button-sm p-button-danger"></p-button>
         </div>
       </td>
       <td>{{project.name}}</td>
@@ -34,7 +32,7 @@
   </ng-template>
   <ng-template pTemplate="summary">
     <div class="flex align-items-center justify-content-between">
-      Total de registros {{projects ? projects.length : 0 }}.
+      Total de registros {{records ? records.length : 0 }}.
     </div>
   </ng-template>
 </p-table>
@@ -43,25 +41,32 @@
 
 <p-dialog [(visible)]="formDisplay" [maximizable]="true" [closeOnEscape]="true" [modal]="true"
           [breakpoints]="{'960px': '75vw'}" [style]="{width: '50vw'}">
-  <ng-template pTemplate="header">
-    {{project.id === undefined ? 'Novo registro' : 'Alterar registro'}}
-  </ng-template>
-  <div class="field">
-    <label for="name" class="block">Nome</label>
-    <input id="name" type="text" style="width: 100%" aria-describedby="name-help" pInputText [(ngModel)]="project.name" />
+  <div class="text-center" *ngIf="loadingDialog">
+    <p-progressSpinner></p-progressSpinner>
   </div>
-  <div class="field">
+  <ng-template *ngIf="!loadingDialog" pTemplate="header">
+    {{record.id === undefined ? 'Novo registro' : 'Alterar registro'}}
+  </ng-template>
+  <div *ngIf="!loadingDialog">
+    <div class="field">
+      <label for="name" class="block">Nome</label>
+      <input id="name" type="text" style="width: 100%" aria-describedby="name-help" pInputText [(ngModel)]="record.name" />
+    </div>
+    <div class="field">
     <span class="p-float-label mt-4">
-      <textarea id="description" style="width: 100%" [(ngModel)]="project.description" pInputTextarea></textarea>
+      <textarea id="description" style="width: 100%" [(ngModel)]="record.description" pInputTextarea></textarea>
       <label for="description">Descrição</label>
     </span>
-  </div>
-  <div class="field">
-    <label for="url" class="block">Url</label>
-    <input id="url" type="text" style="width: 100%" aria-describedby="url-help" pInputText [(ngModel)]="project.url" />
-  </div>
+    </div>
+    <div class="field">
+      <label for="url" class="block">Url</label>
+      <input id="url" type="text" style="width: 100%" aria-describedby="url-help" pInputText [(ngModel)]="record.url" />
+    </div>
 
-  <ng-template pTemplate="footer" class="text-right">
+  </div>
+  <ng-template *ngIf="!loadingDialog" pTemplate="footer" class="text-right">
     <button (click)="save()" pButton type="button" label="Salvar" ></button>
   </ng-template>
 </p-dialog>
+<p-confirmDialog header="Confirma remoção ?" icon="pi pi-exclamation-triangle" [breakpoints]="{'960px': '75vw', '640px': '100vw'}" [style]="{width: '50vw'}"></p-confirmDialog>
+<p-toast></p-toast>

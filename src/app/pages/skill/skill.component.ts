@@ -3,6 +3,8 @@ import {environment} from "../../../environments/environment";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {ConfirmationService, MessageService} from "primeng/api";
 import {SkillInterface} from "../../model/skill.interface";
+import {AbstractService} from "../../service/abstract.service";
+import {CourseCategoryInterface} from "../../model/course_category.interface";
 
 @Component({
   selector: 'app-skill',
@@ -11,13 +13,13 @@ import {SkillInterface} from "../../model/skill.interface";
 })
 export class SkillComponent implements OnInit {
 
-  skills: SkillInterface[] | any = [];
-  skill: SkillInterface | any = {};
-  loading = false;
+  records: SkillInterface[] | any = [];
+  record: SkillInterface | any = {};
+  loadingPage = false;
+  loadingDialog = false;
   formDisplay = false;
-  server = environment.server
   path = '/skills/';
-  constructor(private http:  HttpClient,
+  constructor(private service: AbstractService,
               private confirmationService: ConfirmationService,
               private messageService: MessageService) { }
 
@@ -26,58 +28,54 @@ export class SkillComponent implements OnInit {
   }
 
   createNewRecord(){
-    this.skill = {};
+    this.record = {};
     this.formDisplaySwitch();
   }
 
   editRecord(skill: SkillInterface){
-    this.skill = skill;
+    this.record = skill;
     this.formDisplaySwitch();
   }
 
-  loadReloadRecords(){
-    this.loading = true;
-    this.http.get(this.server.concat(this.path)).subscribe(
-      (data) => {
-        this.skills = data;
-        this.loading = false;
-      }
-    )
+  async loadReloadRecords(){
+    this.loadingPage = true;
+    await this.service.loadReloadRecords(this.path).subscribe({
+      next: (data) => {
+        this.records = data;
+        this.loadingPage = false;
+      },
+      error: (error) => console.log(error)
+    });
   }
 
   public save(){
-    const appHeaders = new HttpHeaders()
-      .append('Content-Type', 'application/json');
-    if(this.skill.id === undefined){
-      this.http.post(this.server.concat(this.path), JSON.stringify(this.skill), {headers: appHeaders}).subscribe(
-        (data) => {
-          this.loadReloadRecords();
-        }
-      )
-    }else{
-      this.http.put(this.server.concat(this.path), JSON.stringify(this.skill), {headers: appHeaders}).subscribe(
-        (data) => {
-          this.loadReloadRecords();
-        }
-      )
-    }
-    this.formDisplaySwitch();
+    this.service.save(this.record, this.path).subscribe({
+      next: (data) => {
+        this.formDisplaySwitch();
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Aviso',
+          detail: 'Solicitação executada com sucesso !'
+        });
+        this.loadReloadRecords();
+        this.loadingDialog = false;
+      },
+      error: (error) => console.log(error)
+    })
   }
 
-  removeRecord(event: Event, skill: SkillInterface) {
+  deleteRecord(record: SkillInterface) {
     this.confirmationService.confirm({
-      // @ts-ignore
-      target: event.target,
       message: 'Deseja realmente excluir ?',
-      icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        let uuid = skill.uuid === undefined ? '' : skill.uuid;
-        this.loading = true;
-        this.http.delete(this.server.concat(this.path).concat(uuid)).subscribe(
-          (data) => {
-            this.loading = false;
-            this.loadReloadRecords();
-            this.messageService.add({severity:'success', summary:'Completed', detail:'Escolaridade foi removida'});
+        this.loadingPage = true;
+        this.service.deleteRecord(record, this.path).subscribe({
+            next: (data) => {
+              this.loadingPage = false;
+              this.messageService.add({severity: 'success', summary: 'Completed', detail: 'Habilidade removido com sucesso'});
+              this.loadReloadRecords();
+            },
+            error: (error) => this.messageService.add({severity: 'error', summary: 'Aviso', detail: 'Falha ao remover habilidade'})
           }
         )
       }

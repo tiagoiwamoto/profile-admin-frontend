@@ -1,4 +1,4 @@
-<p-table [value]="scholarities">
+<p-table [value]="records">
   <ng-template pTemplate="caption">
     <div class="flex align-items-center justify-content-between">
       Escolaridade
@@ -25,9 +25,7 @@
       <td>
         <div class="sizes">
           <p-button label="Editar" (click)="editRecord(scholarity)" icon="pi pi-check" styleClass="p-button-sm"></p-button>
-          <p-button label="Excluir" (click)="setScholarity(scholarity); confirm($event)" class="ml-2" icon="pi pi-trash" styleClass="p-button-sm p-button-danger"></p-button>
-          <p-confirmPopup></p-confirmPopup>
-          <p-toast></p-toast>
+          <p-button label="Excluir" (click)="deleteRecord(scholarity)" class="ml-2" icon="pi pi-trash" styleClass="p-button-sm p-button-danger"></p-button>
         </div>
       </td>
       <td>{{scholarity.schoolName}}</td>
@@ -40,7 +38,7 @@
   </ng-template>
   <ng-template pTemplate="summary">
     <div class="flex align-items-center justify-content-between">
-      Total de registros {{scholarities ? scholarities.length : 0 }}.
+      Total de registros {{records ? records.length : 0 }}.
     </div>
   </ng-template>
 </p-table>
@@ -49,47 +47,54 @@
 
 <p-dialog [(visible)]="formDisplay" [maximizable]="true" [closeOnEscape]="true" [modal]="true"
           [breakpoints]="{'960px': '75vw'}" [style]="{width: '50vw'}">
-  <ng-template pTemplate="header">
-    {{scholarity.id === undefined ? 'Novo registro' : 'Alterar registro'}}
+  <div class="text-center" *ngIf="loadingDialog">
+    <p-progressSpinner></p-progressSpinner>
+  </div>
+  <ng-template *ngIf="!loadingDialog" pTemplate="header">
+    {{record.id === undefined ? 'Novo registro' : 'Alterar registro'}}
   </ng-template>
-  <div class="field">
-    <label for="schoolName" class="block">Nome da instituição</label>
-    <input id="schoolName" type="text" style="width: 100%" aria-describedby="schoolName-help" pInputText [(ngModel)]="scholarity.schoolName" />
-    <small id="schoolName-help" class="block">Informe o nome da instituição.</small>
+  <div *ngIf="!loadingDialog">
+    <div class="field">
+      <label for="schoolName" class="block">Nome da instituição</label>
+      <input id="schoolName" type="text" style="width: 100%" aria-describedby="schoolName-help" pInputText [(ngModel)]="record.schoolName" />
+      <small id="schoolName-help" class="block">Informe o nome da instituição.</small>
+    </div>
+    <div class="field">
+      <label for="courseName" class="block">Nome do curso</label>
+      <input id="courseName" type="text" style="width: 100%" aria-describedby="courseName-help" pInputText [(ngModel)]="record.courseName" />
+      <small id="courseName-help" class="block">Nome do curso.</small>
+    </div>
+    <div class="field">
+      <label for="titleReceivedCourse" class="block">Título do curso</label>
+      <input id="titleReceivedCourse" type="text" style="width: 100%" aria-describedby="titleReceivedCourse-help" pInputText [(ngModel)]="record.titleReceivedCourse" />
+      <small id="titleReceivedCourse-help" class="block">Título do curso.</small>
+    </div>
+    <div class="field">
+      <label for="duration" class="block">Duração em horas</label>
+      <input id="duration" type="text" style="width: 100%" aria-describedby="duration-help" pInputText [(ngModel)]="record.duration" />
+      <small id="duration-help" class="block">Duração em horas.</small>
+    </div>
+    <div class="field">
+      <label for="startDate" class="block">Data de inicio</label>
+      <p-calendar id="startDate" [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}" [(ngModel)]="record.startDate" dateFormat="mm/yy" inputId="startDate"></p-calendar>
+    </div>
+    <div class="field">
+      <label for="dateOfConclusion" class="block">Data de conclusão</label>
+      <p-calendar id="dateOfConclusion" [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}" [(ngModel)]="record.dateOfConclusion" dateFormat="mm/yy" inputId="dateOfConclusion"></p-calendar>
+    </div>
+    <p-fileUpload #fileUpload name="file" (onSelect)="setFile($event, fileUpload)"
+                  accept="image/*" [maxFileSize]="1000000" [showUploadButton]="false" [showCancelButton]="false" [chooseLabel]="'Selecionar arquivo'">
+      <ng-template pTemplate="content">
+        <img *ngIf="record.id" [src]="server + '/files/scholarity/'+ record.uuid + '/' + record.pathOfImageThumb" height="80" />
+        <ul *ngIf="file?.target?.length">
+          <li *ngFor="let file of file?.target?.files">{{file.name}} - {{file.size}} bytes</li>
+        </ul>
+      </ng-template>
+    </p-fileUpload>
   </div>
-  <div class="field">
-    <label for="courseName" class="block">Nome do curso</label>
-    <input id="courseName" type="text" style="width: 100%" aria-describedby="courseName-help" pInputText [(ngModel)]="scholarity.courseName" />
-    <small id="courseName-help" class="block">Nome do curso.</small>
-  </div>
-  <div class="field">
-    <label for="titleReceivedCourse" class="block">Título do curso</label>
-    <input id="titleReceivedCourse" type="text" style="width: 100%" aria-describedby="titleReceivedCourse-help" pInputText [(ngModel)]="scholarity.titleReceivedCourse" />
-    <small id="titleReceivedCourse-help" class="block">Título do curso.</small>
-  </div>
-  <div class="field">
-    <label for="duration" class="block">Duração em horas</label>
-    <input id="duration" type="text" style="width: 100%" aria-describedby="duration-help" pInputText [(ngModel)]="scholarity.duration" />
-    <small id="duration-help" class="block">Duração em horas.</small>
-  </div>
-  <div class="field">
-    <label for="startDate" class="block">Data de inicio</label>
-    <p-calendar id="startDate" [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}" [(ngModel)]="scholarity.startDate" dateFormat="mm/yy" inputId="startDate"></p-calendar>
-  </div>
-  <div class="field">
-    <label for="dateOfConclusion" class="block">Data de conclusão</label>
-    <p-calendar id="dateOfConclusion" [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}" [(ngModel)]="scholarity.dateOfConclusion" dateFormat="mm/yy" inputId="dateOfConclusion"></p-calendar>
-  </div>
-  <p-fileUpload #fileUpload name="file" (onSelect)="setFile($event, fileUpload)"
-                accept="image/*" [maxFileSize]="1000000" [showUploadButton]="false" [showCancelButton]="false" [chooseLabel]="'Selecionar arquivo'">
-    <ng-template pTemplate="content">
-      <img *ngIf="scholarity.id" [src]="server + '/files/scholarity/'+ scholarity.uuid + '/' + scholarity.pathOfImageThumb" height="80" />
-      <ul *ngIf="file?.target?.length">
-        <li *ngFor="let file of file?.target?.files">{{file.name}} - {{file.size}} bytes</li>
-      </ul>
-    </ng-template>
-  </p-fileUpload>
-  <ng-template pTemplate="footer" class="text-right">
+  <ng-template *ngIf="!loadingDialog" pTemplate="footer" class="text-right">
     <button (click)="save()" pButton type="button" label="Salvar" ></button>
   </ng-template>
 </p-dialog>
+<p-confirmDialog header="Confirma remoção ?" icon="pi pi-exclamation-triangle" [breakpoints]="{'960px': '75vw', '640px': '100vw'}" [style]="{width: '50vw'}"></p-confirmDialog>
+<p-toast></p-toast>

@@ -94,35 +94,6 @@ export class CertificationComponent implements OnInit {
       },
       error: (error) => console.log(error)
     })
-
-    // if(this.certification.id === undefined){
-    //   this.http.post(this.server.concat(this.path), formData).subscribe(
-    //     (data) => {
-    //       this.messageService.add({
-    //         severity: 'success',
-    //         summary: 'Aviso',
-    //         detail: 'Certificação foi adicionada com sucesso !'
-    //       });
-    //       this.formDisplaySwitch();
-    //     }
-    //   );
-    // }else {
-    //   formData.append("id", this.certification.id);
-    //   formData.append("uuid", this.certification.uuid);
-    //   this.http.put(this.server.concat(this.path), formData).subscribe(
-    //     async (data) => {
-    //       await this.messageService.add({
-    //         severity: 'success',
-    //         summary: 'Aviso',
-    //         detail: 'Certificação foi atualizada com sucesso !'
-    //       });
-    //       this.formDisplaySwitch();
-    //     }
-    //   );
-    // }
-    //
-    // this.loadReloadRecords();
-
   }
 
   deleteRecord(certification: CertificationInterface) {

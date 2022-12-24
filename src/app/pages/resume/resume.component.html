@@ -1,4 +1,4 @@
-<p-table [value]="resumes">
+<p-table [value]="records">
   <ng-template pTemplate="caption">
     <div class="flex align-items-center justify-content-between">
       Curriculuns
@@ -24,9 +24,7 @@
       <td>
         <div class="sizes">
           <p-button label="Editar" (click)="editRecord(resume)" icon="pi pi-check" styleClass="p-button-sm"></p-button>
-          <p-button label="Excluir" (click)="removeRecord($event, resume)" class="ml-2" icon="pi pi-trash" styleClass="p-button-sm p-button-danger"></p-button>
-          <p-confirmPopup></p-confirmPopup>
-          <p-toast></p-toast>
+          <p-button label="Excluir" (click)="deleteRecord(resume)" class="ml-2" icon="pi pi-trash" styleClass="p-button-sm p-button-danger"></p-button>
         </div>
       </td>
       <td>{{resume.title}}</td>
@@ -38,7 +36,7 @@
   </ng-template>
   <ng-template pTemplate="summary">
     <div class="flex align-items-center justify-content-between">
-      Total de registros {{resumes ? resumes.length : 0 }}.
+      Total de registros {{records ? records.length : 0 }}.
     </div>
   </ng-template>
 </p-table>
@@ -47,37 +45,44 @@
 
 <p-dialog [(visible)]="formDisplay" [maximizable]="true" [closeOnEscape]="true" [modal]="true"
           [breakpoints]="{'960px': '75vw'}" [style]="{width: '50vw'}">
-  <ng-template pTemplate="header">
-    {{resume.id === undefined ? 'Novo registro' : 'Alterar registro'}}
+  <div class="text-center" *ngIf="loadingDialog">
+    <p-progressSpinner></p-progressSpinner>
+  </div>
+  <ng-template *ngIf="!loadingDialog" pTemplate="header">
+    {{record.id === undefined ? 'Novo registro' : 'Alterar registro'}}
   </ng-template>
-  <div class="field">
-    <label for="title" class="block">Titulo</label>
-    <input id="title" type="text" style="width: 100%" aria-describedby="title-help" pInputText [(ngModel)]="resume.title" />
-  </div>
-  <div class="field">
-    <label for="description" class="block">Descrição</label>
-    <input id="description" type="text" style="width: 100%" aria-describedby="description-help" pInputText [(ngModel)]="resume.description" />
-  </div>
-  <div class="field">
-    <label for="language" class="block">Idioma</label>
-    <input id="language" type="text" style="width: 100%" aria-describedby="language-help" pInputText [(ngModel)]="resume.language" />
-  </div>
-  <div class="field">
-    <label for="type" class="block">Tipo</label>
-    <input id="type" type="text" style="width: 100%" aria-describedby="type-help" pInputText [(ngModel)]="resume.type" />
-  </div>
-  <div class="field">
-    <label for="url" class="block">URL</label>
-    <input id="url" type="text" style="width: 100%" aria-describedby="url-help" pInputText [(ngModel)]="resume.url" />
-  </div>
-  <div class="field">
+  <div *ngIf="!loadingDialog">
+    <div class="field">
+      <label for="title" class="block">Titulo</label>
+      <input id="title" type="text" style="width: 100%" aria-describedby="title-help" pInputText [(ngModel)]="record.title" />
+    </div>
+    <div class="field">
+      <label for="description" class="block">Descrição</label>
+      <input id="description" type="text" style="width: 100%" aria-describedby="description-help" pInputText [(ngModel)]="record.description" />
+    </div>
+    <div class="field">
+      <label for="language" class="block">Idioma</label>
+      <input id="language" type="text" style="width: 100%" aria-describedby="language-help" pInputText [(ngModel)]="record.language" />
+    </div>
+    <div class="field">
+      <label for="type" class="block">Tipo</label>
+      <input id="type" type="text" style="width: 100%" aria-describedby="type-help" pInputText [(ngModel)]="record.type" />
+    </div>
+    <div class="field">
+      <label for="url" class="block">URL</label>
+      <input id="url" type="text" style="width: 100%" aria-describedby="url-help" pInputText [(ngModel)]="record.url" />
+    </div>
+    <div class="field">
     <span class="p-float-label mt-4">
-      <textarea id="embed" style="width: 100%" [(ngModel)]="resume.embed" pInputTextarea></textarea>
+      <textarea id="embed" style="width: 100%" [(ngModel)]="record.embed" pInputTextarea></textarea>
       <label for="embed">Embed</label>
     </span>
+    </div>
   </div>
 
-  <ng-template pTemplate="footer" class="text-right">
+  <ng-template *ngIf="!loadingDialog" pTemplate="footer" class="text-right">
     <button (click)="save()" pButton type="button" label="Salvar" ></button>
   </ng-template>
 </p-dialog>
+<p-confirmDialog header="Confirma remoção ?" icon="pi pi-exclamation-triangle" [breakpoints]="{'960px': '75vw', '640px': '100vw'}" [style]="{width: '50vw'}"></p-confirmDialog>
+<p-toast></p-toast>

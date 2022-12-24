@@ -4,6 +4,8 @@ import {HttpClient} from "@angular/common/http";
 import {ConfirmationService, MessageService} from "primeng/api";
 import {FileUpload} from "primeng/fileupload";
 import {SoftwareInterface} from "../../model/software.interface";
+import {AbstractService} from "../../service/abstract.service";
+import {CertificationInterface} from "../../model/certification.interface";
 
 @Component({
   selector: 'app-software',
@@ -12,45 +14,26 @@ import {SoftwareInterface} from "../../model/software.interface";
 })
 export class SoftwareComponent implements OnInit {
 
-  softwares: SoftwareInterface[] | any = [];
-  software: SoftwareInterface | any = {};
+  records: SoftwareInterface[] | any = [];
+  record: SoftwareInterface | any = {};
   file: any;
-  loading = false;
+  loadingPage = false;
+  loadingDialog = false;
   formDisplay = false;
-  server = environment.server;
   path = '/softwares/'
+  server = environment.server;
   fileUpload: any;
 
-  constructor(private http:  HttpClient,
+  constructor(private service: AbstractService,
               private confirmationService: ConfirmationService,
               private messageService: MessageService) { }
-
-  deleteRecord(event: Event, software: SoftwareInterface) {
-    this.confirmationService.confirm({
-      // @ts-ignore
-      target: event.target,
-      message: 'Deseja realmente excluir ?',
-      icon: 'pi pi-exclamation-triangle',
-      accept: () => {
-        let uuid = software.uuid === undefined ? '' : software.uuid;
-        this.loading = true;
-        this.http.delete(this.server.concat(this.path).concat(uuid)).subscribe(
-          (data) => {
-            this.loading = false;
-            this.loadReloadRecords();
-            this.messageService.add({severity:'success', summary:'Completed', detail:'Escolaridade foi removida'});
-          }
-        )
-      }
-    });
-  }
 
   ngOnInit(): void {
     this.loadReloadRecords();
   }
 
   createNewRecord(){
-    this.software = {};
+    this.record = {};
     this.file = [];
     if(this.fileUpload){
       this.fileUpload.clear();
@@ -63,18 +46,19 @@ export class SoftwareComponent implements OnInit {
     if(this.fileUpload){
       this.fileUpload.clear();
     }
-    this.software = software;
+    this.record = software;
     this.formDisplaySwitch();
   }
 
-  loadReloadRecords(){
-    this.loading = true;
-    this.http.get(this.server.concat(this.path)).subscribe(
-      (data) => {
-        this.softwares = data;
-        this.loading = false;
-      }
-    )
+  async loadReloadRecords(){
+    this.loadingPage = true;
+    await this.service.loadReloadRecords(this.path).subscribe({
+      next: (data) => {
+        this.records = data;
+        this.loadingPage = false;
+      },
+      error: (error) => console.log(error)
+    });
   }
 
   formDisplaySwitch(){
@@ -89,31 +73,43 @@ export class SoftwareComponent implements OnInit {
     const formData = new FormData();
     // Store form name as "file" with file data
     formData.append("file", this.file);
-    formData.append("name", this.software.name);
-    formData.append("description", this.software.description);
-    formData.append("url", this.software.url);
-    formData.append("mirrorUrl", this.software.mirrorUrl);
+    formData.append("name", this.record.name);
+    formData.append("description", this.record.description);
+    formData.append("url", this.record.url);
+    formData.append("mirrorUrl", this.record.mirrorUrl);
 
-    if(this.software.id === undefined){
-      this.http.post(this.server.concat(this.path), formData).subscribe(
-        (data) => {
-          this.loadReloadRecords();
-          this.formDisplaySwitch();
-          this.messageService.add({severity:'success', summary:'Completed', detail:'Escolaridade foi adicionada com sucesso'});
-        }
-      )
-    }else {
-      formData.append("id", this.software.id);
-      formData.append("uuid", this.software.uuid);
-      this.http.put(this.server.concat(this.path), formData).subscribe(
-        (data) => {
-          this.loadReloadRecords();
-          this.formDisplaySwitch();
-          this.messageService.add({severity:'success', summary:'Completed', detail:'Escolaridade foi atualizada com sucesso'});
-        }
-      )
-    }
+    this.service.saveForm(formData, this.record, this.path).subscribe({
+      next: (data) => {
+        this.formDisplaySwitch();
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Aviso',
+          detail: 'Solicitação executada com sucesso !'
+        });
+        this.loadReloadRecords();
+        this.loadingDialog = false;
+      },
+      error: (error) => console.log(error)
+    })
 
+  }
+
+  deleteRecord(record: SoftwareInterface) {
+    this.confirmationService.confirm({
+      message: 'Deseja realmente excluir ?',
+      accept: () => {
+        this.loadingPage = true;
+        this.service.deleteRecord(record, this.path).subscribe({
+            next: (data) => {
+              this.loadingPage = false;
+              this.messageService.add({severity: 'success', summary: 'Completed', detail: 'Software removido com sucesso'});
+              this.loadReloadRecords();
+            },
+            error: (error) => this.messageService.add({severity: 'error', summary: 'Aviso', detail: 'Falha ao remover software'})
+          }
+        )
+      }
+    });
   }
 
   setFile(file: any, fileUpload: FileUpload){

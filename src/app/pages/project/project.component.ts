@@ -4,6 +4,8 @@ import {environment} from "../../../environments/environment";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {ConfirmationService, MessageService} from "primeng/api";
 import {ProjectInterface} from "../../model/project.interface";
+import {AbstractService} from "../../service/abstract.service";
+import {CourseCategoryInterface} from "../../model/course_category.interface";
 
 @Component({
   selector: 'app-project',
@@ -12,14 +14,14 @@ import {ProjectInterface} from "../../model/project.interface";
 })
 export class ProjectComponent implements OnInit {
 
-  projects: ProjectInterface[] | any = [];
-  project: ProjectInterface | any = {};
-  loading = false;
+  records: ProjectInterface[] | any = [];
+  record: ProjectInterface | any = {};
+  loadingPage = false;
+  loadingDialog = false;
   formDisplay = false;
-  server = environment.server;
   path = '/projects/'
 
-  constructor(private http:  HttpClient,
+  constructor(private service: AbstractService,
               private confirmationService: ConfirmationService,
               private messageService: MessageService) { }
 
@@ -28,58 +30,54 @@ export class ProjectComponent implements OnInit {
   }
 
   createNewRecord(){
-    this.project = {};
+    this.record = {};
     this.formDisplaySwitch();
   }
 
   editRecord(project: ProjectInterface){
-    this.project = project;
+    this.record = project;
     this.formDisplaySwitch();
   }
 
-  loadReloadRecords(){
-    this.loading = true;
-    this.http.get(this.server.concat(this.path)).subscribe(
-      (data) => {
-        this.projects = data;
-        this.loading = false;
-      }
-    )
+  async loadReloadRecords(){
+    this.loadingPage = true;
+    await this.service.loadReloadRecords(this.path).subscribe({
+      next: (data) => {
+        this.records = data;
+        this.loadingPage = false;
+      },
+      error: (error) => console.log(error)
+    });
   }
 
   public save(){
-    const appHeaders = new HttpHeaders()
-      .append('Content-Type', 'application/json');
-    if(this.project.id === undefined){
-      this.http.post(this.server.concat(this.path), JSON.stringify(this.project), {headers: appHeaders}).subscribe(
-        (data) => {
-          this.loadReloadRecords();
-        }
-      )
-    }else{
-      this.http.put(this.server.concat(this.path), JSON.stringify(this.project), {headers: appHeaders}).subscribe(
-        (data) => {
-          this.loadReloadRecords();
-        }
-      )
-    }
-    this.formDisplaySwitch();
+    this.service.save(this.record, this.path).subscribe({
+      next: (data) => {
+        this.formDisplaySwitch();
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Aviso',
+          detail: 'Solicitação executada com sucesso !'
+        });
+        this.loadReloadRecords();
+        this.loadingDialog = false;
+      },
+      error: (error) => console.log(error)
+    })
   }
 
-  removeRecord(event: Event, skill: SkillInterface) {
+  deleteRecord(record: ProjectInterface) {
     this.confirmationService.confirm({
-      // @ts-ignore
-      target: event.target,
       message: 'Deseja realmente excluir ?',
-      icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        let uuid = skill.uuid === undefined ? '' : skill.uuid;
-        this.loading = true;
-        this.http.delete(this.server.concat(this.path).concat(uuid)).subscribe(
-          (data) => {
-            this.loading = false;
-            this.loadReloadRecords();
-            this.messageService.add({severity:'success', summary:'Completed', detail:'Escolaridade foi removida'});
+        this.loadingPage = true;
+        this.service.deleteRecord(record, this.path).subscribe({
+            next: (data) => {
+              this.loadingPage = false;
+              this.messageService.add({severity: 'success', summary: 'Completed', detail: 'Projeto removido com sucesso'});
+              this.loadReloadRecords();
+            },
+            error: (error) => this.messageService.add({severity: 'error', summary: 'Aviso', detail: 'Falha ao remover projeto'})
           }
         )
       }
