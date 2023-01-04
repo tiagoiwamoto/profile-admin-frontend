@@ -11,7 +11,7 @@ import {AbstractUsecaseFile} from "../../usecase/abstract-usecase-file.service";
 })
 export class SoftwareComponent extends AbstractUsecaseFile<SoftwareInterface> implements OnInit {
 
-  override path = '/softwares/'
+  override path = '/api/v1/softwares/'
 
   constructor(confirmationService: ConfirmationService,
               messageService: MessageService,

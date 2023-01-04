@@ -13,7 +13,7 @@ import {AbstractUsecase} from "../../usecase/abstract-usecase.service";
 })
 export class ExperienceComponent extends AbstractUsecase<ExperienceInterface> implements OnInit {
 
-  override path = '/experiences/';
+  override path = '/api/v1/experiences/';
   constructor(confirmationService: ConfirmationService,
               messageService: MessageService,
               service: AbstractService) {

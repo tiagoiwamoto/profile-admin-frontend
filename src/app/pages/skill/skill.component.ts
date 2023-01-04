@@ -11,7 +11,7 @@ import {AbstractUsecase} from "../../usecase/abstract-usecase.service";
 })
 export class SkillComponent extends AbstractUsecase<SkillInterface> implements OnInit {
 
-  override path = '/skills/';
+  override path = '/api/v1/skills/';
   constructor(confirmationService: ConfirmationService,
               messageService: MessageService,
               service: AbstractService) {

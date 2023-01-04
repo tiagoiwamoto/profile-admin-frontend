@@ -12,7 +12,7 @@ import {AbstractUsecaseFile} from "../../usecase/abstract-usecase-file.service";
 })
 export class CertificationComponent extends AbstractUsecaseFile<CertificationInterface> implements OnInit {
 
-  override path = '/certifications/'
+  override path = '/api/v1/certifications/'
 
   constructor(confirmationService: ConfirmationService,
               messageService: MessageService,

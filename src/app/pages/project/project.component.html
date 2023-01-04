@@ -1,4 +1,8 @@
-<p-table [value]="records">
+<div class="text-center" *ngIf="loadingPage">
+  <p-progressSpinner></p-progressSpinner>
+  <p>Carregando...</p>
+</div>
+<p-table *ngIf="!loadingPage" [value]="records">
   <ng-template pTemplate="caption">
     <div class="flex align-items-center justify-content-between">
       Projetos

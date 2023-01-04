@@ -11,7 +11,7 @@ import {AbstractUsecase} from "../../usecase/abstract-usecase.service";
 })
 export class ResumeComponent extends AbstractUsecase<ResumeInterface> implements OnInit {
 
-  override path = '/resumes/';
+  override path = '/api/v1/resumes/';
 
   constructor(confirmationService: ConfirmationService,
               messageService: MessageService,

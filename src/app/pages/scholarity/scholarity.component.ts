@@ -4,6 +4,7 @@ import * as moment from "moment/moment";
 import {ConfirmationService, MessageService} from "primeng/api";
 import {AbstractService} from "../../service/abstract.service";
 import {AbstractUsecaseFile} from "../../usecase/abstract-usecase-file.service";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 
 
 @Component({
@@ -13,12 +14,19 @@ import {AbstractUsecaseFile} from "../../usecase/abstract-usecase-file.service";
 })
 export class ScholarityComponent extends AbstractUsecaseFile<ScholarityInterface> implements OnInit {
 
-  override path = '/scholarities/';
+  override path = '/api/v1/scholarities/';
 
   constructor(confirmationService: ConfirmationService,
               messageService: MessageService,
-              service: AbstractService) {
+              service: AbstractService,
+              private formBuilder: FormBuilder) {
     super(confirmationService, messageService, service);
+    this.form = this.formBuilder.group({
+      schoolName: [null, [Validators.required, Validators.minLength(3)]],
+      courseName: [null, [Validators.required, Validators.minLength(3)]],
+      titleReceivedCourse: [null, [Validators.required, Validators.minLength(3)]],
+      duration: [null, [Validators.required, Validators.min(0)]],
+    });
   }
 
   async ngOnInit(): Promise<void> {
@@ -44,10 +52,10 @@ export class ScholarityComponent extends AbstractUsecaseFile<ScholarityInterface
     const dateOfConclusion = moment(dateOfConclusionMoment).format('YYYY-MM-DD').toString();
     // Store form name as "file" with file data
     formData.append("file", this.file);
-    formData.append("schoolName", this.record.schoolName);
-    formData.append("courseName", this.record.courseName);
-    formData.append("titleReceivedCourse", this.record.titleReceivedCourse);
-    formData.append("duration", this.record.duration);
+    formData.append("schoolName", this.record.schoolName ? this.record.schoolName : '');
+    formData.append("courseName", this.record.courseName ? this.record.courseName : '');
+    formData.append("titleReceivedCourse", this.record.titleReceivedCourse ? this.record.titleReceivedCourse : '');
+    formData.append("duration", this.record.duration ? 0 : this.record.duration);
     formData.append("startDate", startDate);
     formData.append("dateOfConclusion", dateOfConclusion);
 

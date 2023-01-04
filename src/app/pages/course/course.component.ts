@@ -16,7 +16,7 @@ export class CourseComponent extends AbstractUsecaseFile<CourseInterface> implem
 
   courseCategory: CourseCategoryInterface | any = {};
   courseCategoryUuid: string | any = '';
-  override path = '/courses/'
+  override path = '/api/v1/courses/'
 
   constructor(confirmationService: ConfirmationService,
               messageService: MessageService,
@@ -57,8 +57,8 @@ export class CourseComponent extends AbstractUsecaseFile<CourseInterface> implem
     });
   }
 
-  loadCourseCategory(){
-    this.service.loadReloadRecords('/courses_categories/'.concat(this.courseCategoryUuid)).subscribe({
+  async loadCourseCategory(){
+    await this.service.loadReloadRecords('/courses_categories/'.concat(this.courseCategoryUuid)).subscribe({
       next: (data) => {
         this.courseCategory = data;
       },

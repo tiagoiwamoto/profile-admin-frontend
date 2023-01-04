@@ -11,7 +11,7 @@ import {CourseCategoryInterface} from "../../model/course_category.interface";
 })
 export class CourseCategoryComponent extends AbstractUsecase<CourseCategoryInterface> implements OnInit {
 
-  override path = '/courses_categories/'
+  override path = '/api/v1/courses_categories/'
 
   constructor(confirmationService: ConfirmationService,
               messageService: MessageService,

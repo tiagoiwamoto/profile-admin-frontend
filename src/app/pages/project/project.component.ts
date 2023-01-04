@@ -11,7 +11,7 @@ import {AbstractUsecase} from "../../usecase/abstract-usecase.service";
 })
 export class ProjectComponent extends AbstractUsecase<ProjectInterface> implements OnInit {
 
-  override path = '/projects/'
+  override path = '/api/v1/projects/'
 
   constructor(confirmationService: ConfirmationService,
               messageService: MessageService,

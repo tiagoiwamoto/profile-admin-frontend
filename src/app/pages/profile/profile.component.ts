@@ -11,7 +11,7 @@ import {AbstractUsecase} from "../../usecase/abstract-usecase.service";
 })
 export class ProfileComponent extends AbstractUsecase<ProfileInterface> implements OnInit {
 
-  override path = '/profiles/';
+  override path = '/api/v1/profiles/';
 
   constructor(confirmationService: ConfirmationService,
               messageService: MessageService,

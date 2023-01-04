@@ -56,22 +56,22 @@
   <div *ngIf="!loadingDialog">
     <div class="field">
       <label for="schoolName" class="block">Nome da instituição</label>
-      <input id="schoolName" type="text" style="width: 100%" aria-describedby="schoolName-help" pInputText [(ngModel)]="record.schoolName" />
-      <small id="schoolName-help" class="block">Informe o nome da instituição.</small>
+      <input id="schoolName" type="text" style="width: 100%" aria-describedby="schoolName-help" pInputText [(ngModel)]="record.schoolName"  />
+      <small id="schoolName-help" class="block"><p-chip label="Este campo precisa ser preenchido de forma correta"></p-chip></small>
     </div>
     <div class="field">
       <label for="courseName" class="block">Nome do curso</label>
-      <input id="courseName" type="text" style="width: 100%" aria-describedby="courseName-help" pInputText [(ngModel)]="record.courseName" />
+      <input id="courseName" formControlName="courseName" type="text" style="width: 100%" aria-describedby="courseName-help" pInputText [(ngModel)]="record.courseName" />
       <small id="courseName-help" class="block">Nome do curso.</small>
     </div>
     <div class="field">
       <label for="titleReceivedCourse" class="block">Título do curso</label>
-      <input id="titleReceivedCourse" type="text" style="width: 100%" aria-describedby="titleReceivedCourse-help" pInputText [(ngModel)]="record.titleReceivedCourse" />
+      <input id="titleReceivedCourse" formControlName="titleReceivedCourse" type="text" style="width: 100%" aria-describedby="titleReceivedCourse-help" pInputText [(ngModel)]="record.titleReceivedCourse" />
       <small id="titleReceivedCourse-help" class="block">Título do curso.</small>
     </div>
     <div class="field">
       <label for="duration" class="block">Duração em horas</label>
-      <input id="duration" type="text" style="width: 100%" aria-describedby="duration-help" pInputText [(ngModel)]="record.duration" />
+      <input id="duration" formControlName="duration" type="text" style="width: 100%" aria-describedby="duration-help" pInputText [(ngModel)]="record.duration" />
       <small id="duration-help" class="block">Duração em horas.</small>
     </div>
     <div class="field">
@@ -96,5 +96,4 @@
     <button (click)="saveRecord()" pButton type="button" label="Salvar" ></button>
   </ng-template>
 </p-dialog>
-<p-confirmDialog header="Confirma remoção ?" icon="pi pi-exclamation-triangle" [breakpoints]="{'960px': '75vw', '640px': '100vw'}" [style]="{width: '50vw'}"></p-confirmDialog>
 <p-toast></p-toast>

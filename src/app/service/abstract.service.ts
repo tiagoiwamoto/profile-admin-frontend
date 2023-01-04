@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {environment} from "../../environments/environment";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {ConfirmationService, MessageService} from "primeng/api";
 import {Observable} from "rxjs";
 import {AbstractInterface} from "../model/abstract.interface";
 
@@ -13,9 +12,7 @@ export class AbstractService {
   public formDisplay = false;
   server = environment.server;
 
-  constructor(private http:  HttpClient,
-              private confirmationService: ConfirmationService,
-              private messageService: MessageService) {
+  constructor(private http:  HttpClient) {
   }
 
   loadReloadRecords(path: string): Observable<AbstractInterface>{

@@ -14,7 +14,7 @@ import {HomeComponent} from './pages/home/home.component';
 import {TagModule} from "primeng/tag";
 import {DialogModule} from "primeng/dialog";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {InputTextModule} from "primeng/inputtext";
 import {InputTextareaModule} from "primeng/inputtextarea";
 import {ToolbarModule} from "primeng/toolbar";
@@ -102,7 +102,8 @@ function initializeKeycloak(keycloak: KeycloakService) {
         MenubarModule,
         ChipModule,
         DividerModule,
-        ConfirmDialogModule
+        ConfirmDialogModule,
+        ReactiveFormsModule
     ],
   providers: [
     {

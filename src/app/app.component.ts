@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {MenuItem} from "primeng/api";
+import {ConfirmationService, MenuItem} from "primeng/api";
 import {KeycloakService} from "keycloak-angular";
 
 @Component({
@@ -10,7 +10,8 @@ import {KeycloakService} from "keycloak-angular";
 export class AppComponent {
   title = 'profile-admin';
   items: MenuItem[];
-  constructor(public auth: KeycloakService) {
+  constructor(public auth: KeycloakService,
+              protected confirmationService: ConfirmationService) {
     this.items = [];
   }
 
@@ -69,7 +70,15 @@ export class AppComponent {
       },
       {
         label:'Quit',
-        icon:'pi pi-fw pi-power-off'
+        icon:'pi pi-fw pi-power-off',
+        command: () => {
+          this.confirmationService.confirm({
+            message: 'Deseja realmente sair ?',
+            accept: () => {
+              this.auth.logout();
+            }
+          });
+        }
       }
     ];
   }

@@ -21,6 +21,7 @@ export class AbstractUsecaseFile<T> extends AbstractUsecase<T>{
   }
 
   override createNewRecord() {
+    this.loadingDialog = false;
     this.record = {};
     this.file = [];
     if (this.fileUpload) {
@@ -51,7 +52,13 @@ export class AbstractUsecaseFile<T> extends AbstractUsecase<T>{
         this.loadReloadRecords();
         this.loadingDialog = false;
       },
-      error: (error) => console.log(error)
+      error: (response) => {
+        this.loadingDialog = false;
+        this.responseError = response.error;
+        this.responseError.messages.forEach((message: any) => {
+          this.messageService.add({severity: 'error', summary: 'Aviso', detail: message, life: 10000, closable: true})
+        })
+      }
     })
   }
 
