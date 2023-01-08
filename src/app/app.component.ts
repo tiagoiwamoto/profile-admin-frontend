@@ -28,42 +28,42 @@ export class AppComponent {
           },
           {
             label:'Escolaridade',
-            icon:'pi pi-fw pi-video',
+            icon:'fa-solid fa-graduation-cap',
             routerLink:'scholarities'
           },
           {
             label:'Curriculuns',
-            icon:'pi pi-fw pi-video',
+            icon:'fa-regular fa-file',
             routerLink:'resumes'
           },
           {
             label:'Experiencias',
-            icon:'pi pi-fw pi-video',
+            icon:'fa-solid fa-building',
             routerLink:'experiences'
           },
           {
             label:'Certificações',
-            icon:'pi pi-fw pi-video',
+            icon:'fa-solid fa-certificate',
             routerLink:'certifications'
           },
           {
             label:'Habilidades',
-            icon:'pi pi-fw pi-video',
+            icon:'fa-solid fa-hat-wizard',
             routerLink:'skills'
           },
           {
             label:'Projetos',
-            icon:'pi pi-fw pi-video',
+            icon:'fa-solid fa-briefcase',
             routerLink:'projects'
           },
           {
             label:'Cursos',
-            icon:'pi pi-fw pi-video',
+            icon:'fa-regular fa-lightbulb',
             routerLink:'courses_categories'
           },
           {
             label:'Softwares',
-            icon:'pi pi-fw pi-video',
+            icon:'fa-solid fa-cube',
             routerLink:'softwares'
           }
         ]

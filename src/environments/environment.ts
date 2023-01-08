@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  server: 'http://localhost:8081'
+  server: 'http://127.0.0.1:8081',
+  keycloakUrl: 'http://127.0.0.1:28080'
 };
 
 /*

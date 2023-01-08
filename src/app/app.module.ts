@@ -41,6 +41,8 @@ import {CourseComponent} from './pages/course/course.component';
 import {SoftwareComponent} from './pages/software/software.component';
 import {DividerModule} from "primeng/divider";
 import {ConfirmDialogModule} from "primeng/confirmdialog";
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import {environment} from "../environments/environment";
 
 function initializeKeycloak(keycloak: KeycloakService) {
 
@@ -48,7 +50,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
     keycloak.init({
       config: {
         realm: 'profile-admin',
-        url: 'http://localhost:28080',
+        url: environment.keycloakUrl,
         clientId: 'web-app',
       },
       initOptions: {
@@ -103,7 +105,8 @@ function initializeKeycloak(keycloak: KeycloakService) {
         ChipModule,
         DividerModule,
         ConfirmDialogModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        FontAwesomeModule
     ],
   providers: [
     {

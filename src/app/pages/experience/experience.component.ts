@@ -26,16 +26,14 @@ export class ExperienceComponent extends AbstractUsecase<ExperienceInterface> im
 
   override editRecord(courseCategory: CourseCategoryInterface){
     this.record = courseCategory;
-    this.record.startDate = new Date(this.record.startDate);
-    this.record.endDate = new Date(this.record.endDate);
+    this.record.startDate = moment(this.record.startDate).format('YYYY-MM').toString();
+    this.record.endDate = moment(this.record.endDate).format('YYYY-MM').toString();
     this.formDisplaySwitch();
   }
 
   public saveRecord(){
-    const startDateMoment = moment(this.record.startDate, 'DD/MM/YYYY');
-    const endDateMoment = moment(this.record.endDate, 'DD/MM/YYYY');
-    this.record.startDate = moment(startDateMoment).format('YYYY-MM-DD').toString();
-    this.record.endDate = moment(endDateMoment).format('YYYY-MM-DD').toString();
+    this.record.startDate = this.record.startDate.concat('-02')
+    this.record.endDate = this.record.endDate.concat('-02')
     this.save();
   }
 }

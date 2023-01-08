@@ -73,11 +73,11 @@
     </div>
     <div class="field">
       <label for="startDate" class="block">Data de inicio</label>
-      <p-calendar id="startDate" [(ngModel)]="record.startDate" dateFormat="dd/mm/yy" inputId="startDate"></p-calendar>
+      <input style="width: 100%" min="1990-01" max="3000-12" pInputText [(ngModel)]="record.startDate" type="month" id="startDate" name="startDate">
     </div>
     <div class="field">
       <label for="endDate" class="block">Data de conclusão</label>
-      <p-calendar id="endDate" [(ngModel)]="record.endDate" dateFormat="dd/mm/yy" inputId="endDate"></p-calendar>
+      <input style="width: 100%" min="1990-01" max="3000-12" pInputText [(ngModel)]="record.endDate" type="month" id="endDate" name="endDate">
     </div>
     <p-fileUpload #fileUpload name="file" (onSelect)="setFile($event, fileUpload)"
                   accept="image/*" [maxFileSize]="1000000" [showUploadButton]="false" [showCancelButton]="false" [chooseLabel]="'Selecionar arquivo'">

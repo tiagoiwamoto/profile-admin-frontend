@@ -4,7 +4,6 @@ import * as moment from "moment/moment";
 import {ConfirmationService, MessageService} from "primeng/api";
 import {AbstractService} from "../../service/abstract.service";
 import {AbstractUsecaseFile} from "../../usecase/abstract-usecase-file.service";
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 
 
 @Component({
@@ -18,15 +17,8 @@ export class ScholarityComponent extends AbstractUsecaseFile<ScholarityInterface
 
   constructor(confirmationService: ConfirmationService,
               messageService: MessageService,
-              service: AbstractService,
-              private formBuilder: FormBuilder) {
+              service: AbstractService) {
     super(confirmationService, messageService, service);
-    this.form = this.formBuilder.group({
-      schoolName: [null, [Validators.required, Validators.minLength(3)]],
-      courseName: [null, [Validators.required, Validators.minLength(3)]],
-      titleReceivedCourse: [null, [Validators.required, Validators.minLength(3)]],
-      duration: [null, [Validators.required, Validators.min(0)]],
-    });
   }
 
   async ngOnInit(): Promise<void> {
@@ -39,28 +31,31 @@ export class ScholarityComponent extends AbstractUsecaseFile<ScholarityInterface
       this.fileUpload.clear();
     }
     this.record = scholarity;
-    this.record.startDate = new Date(this.record.startDate);
-    this.record.dateOfConclusion = new Date(this.record.dateOfConclusion);
+    this.record.startDate = moment(this.record.startDate).format('YYYY-MM').toString();
+    this.record.dateOfConclusion = moment(this.record.dateOfConclusion).format('YYYY-MM').toString();
     this.formDisplaySwitch();
   }
 
   saveRecord(){
     const formData = new FormData();
-    const startDateMoment = moment(this.record.startDate, 'DD/MM/YYYY');
-    const dateOfConclusionMoment = moment(this.record.dateOfConclusion, 'DD/MM/YYYY');
-    const startDate = moment(startDateMoment).format('YYYY-MM-DD').toString();
-    const dateOfConclusion = moment(dateOfConclusionMoment).format('YYYY-MM-DD').toString();
+    this.record.startDate = this.record.startDate.concat('-02')
+    this.record.dateOfConclusion = this.record.dateOfConclusion.concat('-02')
     // Store form name as "file" with file data
     formData.append("file", this.file);
     formData.append("schoolName", this.record.schoolName ? this.record.schoolName : '');
     formData.append("courseName", this.record.courseName ? this.record.courseName : '');
     formData.append("titleReceivedCourse", this.record.titleReceivedCourse ? this.record.titleReceivedCourse : '');
-    formData.append("duration", this.record.duration ? 0 : this.record.duration);
-    formData.append("startDate", startDate);
-    formData.append("dateOfConclusion", dateOfConclusion);
+    formData.append("duration", this.record.duration);
+    formData.append("startDate", this.record.startDate);
+    formData.append("dateOfConclusion", this.record.dateOfConclusion);
 
     this.saveForm(formData, this.record);
 
+  }
+
+  logStartDate(event: Event){
+    // @ts-ignore
+    console.log(event.target.value);
   }
 
 }

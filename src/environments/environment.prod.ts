@@ -1,4 +1,5 @@
 export const environment = {
   production: true,
-  server: 'http://localhost:8081'
+  server: 'https://kamehouse.com.br:8081',
+  keycloakUrl: 'https://kamehouse.com.br:8443'
 };

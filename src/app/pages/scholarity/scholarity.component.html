@@ -57,30 +57,26 @@
     <div class="field">
       <label for="schoolName" class="block">Nome da instituição</label>
       <input id="schoolName" type="text" style="width: 100%" aria-describedby="schoolName-help" pInputText [(ngModel)]="record.schoolName"  />
-      <small id="schoolName-help" class="block"><p-chip label="Este campo precisa ser preenchido de forma correta"></p-chip></small>
     </div>
     <div class="field">
       <label for="courseName" class="block">Nome do curso</label>
-      <input id="courseName" formControlName="courseName" type="text" style="width: 100%" aria-describedby="courseName-help" pInputText [(ngModel)]="record.courseName" />
-      <small id="courseName-help" class="block">Nome do curso.</small>
+      <input id="courseName" type="text" style="width: 100%" aria-describedby="courseName-help" pInputText [(ngModel)]="record.courseName" />
     </div>
     <div class="field">
       <label for="titleReceivedCourse" class="block">Título do curso</label>
-      <input id="titleReceivedCourse" formControlName="titleReceivedCourse" type="text" style="width: 100%" aria-describedby="titleReceivedCourse-help" pInputText [(ngModel)]="record.titleReceivedCourse" />
-      <small id="titleReceivedCourse-help" class="block">Título do curso.</small>
+      <input id="titleReceivedCourse" type="text" style="width: 100%" aria-describedby="titleReceivedCourse-help" pInputText [(ngModel)]="record.titleReceivedCourse" />
     </div>
     <div class="field">
       <label for="duration" class="block">Duração em horas</label>
-      <input id="duration" formControlName="duration" type="text" style="width: 100%" aria-describedby="duration-help" pInputText [(ngModel)]="record.duration" />
-      <small id="duration-help" class="block">Duração em horas.</small>
+      <input id="duration" type="text" style="width: 100%" aria-describedby="duration-help" pInputText [(ngModel)]="record.duration" />
     </div>
     <div class="field">
       <label for="startDate" class="block">Data de inicio</label>
-      <p-calendar id="startDate" [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}" [(ngModel)]="record.startDate" dateFormat="mm/yy" inputId="startDate"></p-calendar>
+      <input style="width: 100%" min="1990-01" max="3000-12" pInputText [(ngModel)]="record.startDate" type="month" id="startDate" name="startDate">
     </div>
     <div class="field">
       <label for="dateOfConclusion" class="block">Data de conclusão</label>
-      <p-calendar id="dateOfConclusion" [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}" [(ngModel)]="record.dateOfConclusion" dateFormat="mm/yy" inputId="dateOfConclusion"></p-calendar>
+      <input style="width: 100%" min="1990-01" max="3000-12" pInputText [(ngModel)]="record.dateOfConclusion" type="month" id="dateOfConclusion" name="dateOfConclusion">
     </div>
     <p-fileUpload #fileUpload name="file" (onSelect)="setFile($event, fileUpload)"
                   accept="image/*" [maxFileSize]="1000000" [showUploadButton]="false" [showCancelButton]="false" [chooseLabel]="'Selecionar arquivo'">

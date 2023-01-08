@@ -41,8 +41,8 @@ export class CourseComponent extends AbstractUsecaseFile<CourseInterface> implem
       this.fileUpload.clear();
     }
     this.record = course;
-    this.record.startDate = new Date(this.record.startDate);
-    this.record.endDate = new Date(this.record.endDate);
+    this.record.startDate = moment(this.record.startDate).format('YYYY-MM').toString();
+    this.record.endDate = moment(this.record.endDate).format('YYYY-MM').toString();
     this.formDisplaySwitch();
   }
 
@@ -58,7 +58,7 @@ export class CourseComponent extends AbstractUsecaseFile<CourseInterface> implem
   }
 
   async loadCourseCategory(){
-    await this.service.loadReloadRecords('/courses_categories/'.concat(this.courseCategoryUuid)).subscribe({
+    await this.service.loadReloadRecords('/api/v1/courses_categories/'.concat(this.courseCategoryUuid)).subscribe({
       next: (data) => {
         this.courseCategory = data;
       },
@@ -68,17 +68,15 @@ export class CourseComponent extends AbstractUsecaseFile<CourseInterface> implem
 
   saveRecord(){
     const formData = new FormData();
-    const startDateMoment = moment(this.record.startDate, 'DD/MM/YYYY');
-    const endDateMoment = moment(this.record.endDate, 'DD/MM/YYYY');
-    const startDate = moment(startDateMoment).format('YYYY-MM-DD').toString();
-    const endDate = moment(endDateMoment).format('YYYY-MM-DD').toString();
+    this.record.startDate = this.record.startDate.concat('-02')
+    this.record.endDate = this.record.endDate.concat('-02')
     // Store form name as "file" with file data
     formData.append("file", this.file);
     formData.append("name", this.record.name);
     formData.append("school", this.record.school);
     formData.append("duration", this.record.duration);
-    formData.append("startDate", startDate);
-    formData.append("endDate", endDate);
+    formData.append("startDate", this.record.startDate);
+    formData.append("endDate", this.record.endDate);
     formData.append("courseCategoryUuid", this.courseCategory.uuid);
     this.saveForm(formData, this.record);
 

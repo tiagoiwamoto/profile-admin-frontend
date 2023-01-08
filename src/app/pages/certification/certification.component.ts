@@ -26,13 +26,14 @@ export class CertificationComponent extends AbstractUsecaseFile<CertificationInt
 
   saveRecord() {
     const formData = new FormData();
-    const earnDateMoment = moment(this.record.earnDate, 'DD/MM/YYYY');
-    const earnDate = moment(earnDateMoment).format('YYYY-MM-DD').toString();
+
+
+    this.record.earnDate = this.record.earnDate.concat('-02')
     // Store form name as "file" with file data
     formData.append("file", this.file);
     formData.append("name", this.record.name);
     formData.append("validateUrl", this.record.validateUrl);
-    formData.append("earnDate", earnDate);
+    formData.append("earnDate", this.record.earnDate);
     this.saveForm(formData, this.record);
 
   }
@@ -43,7 +44,7 @@ export class CertificationComponent extends AbstractUsecaseFile<CertificationInt
       this.fileUpload.clear();
     }
     this.record = certification;
-    this.record.earnDate = new Date(this.record.earnDate);
+    this.record.earnDate = moment(this.record.earnDate).format('YYYY-MM').toString();
     this.formDisplaySwitch();
   }
 
