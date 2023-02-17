@@ -22,6 +22,8 @@ export class CertificationComponent extends AbstractUsecaseFile<CertificationInt
 
   async ngOnInit(): Promise<void> {
     await this.loadReloadRecords();
+    // @ts-ignore
+    this.records.sort((a, b) => (b.earnDate > a.earnDate) ? 1 : -1)
   }
 
   saveRecord() {

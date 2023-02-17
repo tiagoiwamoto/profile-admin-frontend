@@ -43,6 +43,8 @@ import {DividerModule} from "primeng/divider";
 import {ConfirmDialogModule} from "primeng/confirmdialog";
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {environment} from "../environments/environment";
+import {ImageModule} from "primeng/image";
+import {CarouselModule} from "primeng/carousel";
 
 function initializeKeycloak(keycloak: KeycloakService) {
 
@@ -77,37 +79,39 @@ function initializeKeycloak(keycloak: KeycloakService) {
     CourseComponent,
     SoftwareComponent
   ],
-    imports: [
-        BrowserModule,
-        BrowserAnimationsModule,
-        KeycloakAngularModule,
-        AppRoutingModule,
-        AccordionModule,
-        CardModule,
-        ButtonModule,
-        HttpClientModule,
-        ProgressSpinnerModule,
-        TagModule,
-        DialogModule,
-        FormsModule,
-        InputTextModule,
-        InputTextareaModule,
-        ToolbarModule,
-        BadgeModule,
-        CheckboxModule,
-        TableModule,
-        InputMaskModule,
-        FileUploadModule,
-        CalendarModule,
-        ConfirmPopupModule,
-        ToastModule,
-        MenubarModule,
-        ChipModule,
-        DividerModule,
-        ConfirmDialogModule,
-        ReactiveFormsModule,
-        FontAwesomeModule
-    ],
+  imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    KeycloakAngularModule,
+    AppRoutingModule,
+    AccordionModule,
+    CardModule,
+    ButtonModule,
+    HttpClientModule,
+    ProgressSpinnerModule,
+    TagModule,
+    DialogModule,
+    FormsModule,
+    InputTextModule,
+    InputTextareaModule,
+    ToolbarModule,
+    BadgeModule,
+    CheckboxModule,
+    TableModule,
+    InputMaskModule,
+    FileUploadModule,
+    CalendarModule,
+    ConfirmPopupModule,
+    ToastModule,
+    MenubarModule,
+    ChipModule,
+    DividerModule,
+    ConfirmDialogModule,
+    ReactiveFormsModule,
+    FontAwesomeModule,
+    ImageModule,
+    CarouselModule
+  ],
   providers: [
     {
       provide: APP_INITIALIZER,

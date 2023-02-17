@@ -6,6 +6,7 @@ import {ActivatedRoute} from "@angular/router";
 import {CourseCategoryInterface} from "../../model/course_category.interface";
 import {AbstractService} from "../../service/abstract.service";
 import {AbstractUsecaseFile} from "../../usecase/abstract-usecase-file.service";
+import {Table} from "primeng/table";
 
 @Component({
   selector: 'app-course',
@@ -16,6 +17,7 @@ export class CourseComponent extends AbstractUsecaseFile<CourseInterface> implem
 
   courseCategory: CourseCategoryInterface | any = {};
   courseCategoryUuid: string | any = '';
+
   override path = '/api/v1/courses/'
 
   constructor(confirmationService: ConfirmationService,
@@ -51,6 +53,9 @@ export class CourseComponent extends AbstractUsecaseFile<CourseInterface> implem
     await this.service.loadReloadRecords(this.path.concat(this.courseCategoryUuid)).subscribe({
       next: (data) => {
         this.records = data;
+        this.records.reverse();
+        // @ts-ignore
+        this.records.sort((a, b) => (b.endDate > a.endDate) ? 1 : -1)
         this.loadingPage = false;
       },
       error: (error) => console.log(error)

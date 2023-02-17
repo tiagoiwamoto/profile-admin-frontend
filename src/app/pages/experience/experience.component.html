@@ -2,13 +2,21 @@
   <p-progressSpinner></p-progressSpinner>
   <p>Carregando...</p>
 </div>
-<p-table *ngIf="!loadingPage" [value]="records">
+<p-table #table *ngIf="!loadingPage" [value]="records" dataKey="id"
+         [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50]" [loading]="loadingPage"
+         [paginator]="true" currentPageReportTemplate="Mostrando registro {first} até {last} de {totalRecords} registros"
+         [globalFilterFields]="['job','company','description','startDate','endDate']">
   <ng-template pTemplate="caption">
     <div class="flex align-items-center justify-content-between">
       Experiência profissional
       <div class="p-toolbar-group-right">
         <p-button (click)="createNewRecord()" icon="pi pi-plus"></p-button>
         <p-button (click)="loadReloadRecords()" class="ml-2" icon="pi pi-refresh"></p-button>
+        <button pButton label="Clear" class="p-button-outlined ml-2" icon="pi pi-filter-slash" (click)="clear(table)"></button>
+        <span class="p-input-icon-left ml-2">
+          <i class="pi pi-search"></i>
+          <input pInputText type="text" [(ngModel)]="search" (input)="table.filterGlobal(search, 'contains')" placeholder="Search keyword" />
+        </span>
       </div>
 
     </div>
@@ -34,7 +42,7 @@
       <td>{{experience.job}}</td>
       <td>{{experience.company}}</td>
       <td>{{experience.startDate | date: 'MM/yyyy'}}</td>
-      <td>{{experience.endDate | date: 'MM/yyyy'}}</td>
+      <td>{{experience.endDate !== undefined ? (experience.endDate | date: 'MM/yyyy') : 'Atual'}}</td>
       <td>{{experience.description}}</td>
     </tr>
   </ng-template>

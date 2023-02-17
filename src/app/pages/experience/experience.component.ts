@@ -22,6 +22,8 @@ export class ExperienceComponent extends AbstractUsecase<ExperienceInterface> im
 
   async ngOnInit(): Promise<void> {
     await this.loadReloadRecords();
+    // @ts-ignore
+    this.records.sort((a, b) => (b.endDate > a.endDate) ? 1 : -1)
   }
 
   override editRecord(courseCategory: CourseCategoryInterface){
@@ -33,7 +35,11 @@ export class ExperienceComponent extends AbstractUsecase<ExperienceInterface> im
 
   public saveRecord(){
     this.record.startDate = this.record.startDate.concat('-02')
-    this.record.endDate = this.record.endDate.concat('-02')
+    console.log(Boolean(this.record.endDate))
+    debugger;
+    if(Boolean(this.record.endDate)){
+      this.record.endDate = this.record.endDate.concat('-02')
+    }
     this.save();
   }
 }

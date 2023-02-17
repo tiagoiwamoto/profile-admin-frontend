@@ -1,49 +1,39 @@
-<h1>Admin Profile</h1>
+<div class="text-center" *ngIf="loadingPage">
+  <p-progressSpinner></p-progressSpinner>
+  <p>Carregando...</p>
+</div>
 
-<hr />
+<div class="card ml-3 mr-3">
+  <div class="grid">
+    <div class="sm:col-12 md:col-4">
 
-<a routerLink="/profiles">Profiles</a> |
-<a routerLink="/scholarity">Escolaridade</a> |
-<a routerLink="/">Home</a>
-
-<hr />
-
-<button *ngIf="isLoggedIn" type="button" (click)="logout()">Log out</button>
-<button *ngIf="!isLoggedIn" type="button" (click)="login()">Log in</button>
-
-<p-card *ngIf="userProfile">
-  <ng-template pTemplate="header">
-    Header content here
-  </ng-template>
-  <table>
-    <tr *ngIf="userProfile.username">
-      <th scope="row">Username</th>
-      <td>{{ userProfile.username }}</td>
-    </tr>
-    <tr *ngIf="userProfile.firstName">
-      <th scope="row">First name</th>
-      <td>{{ userProfile.firstName }}</td>
-    </tr>
-    <tr *ngIf="userProfile.lastName">
-      <th scope="row">First name</th>
-      <td>{{ userProfile.lastName }}</td>
-    </tr>
-    <tr *ngIf="userProfile.email">
-      <th scope="row">E-mail</th>
-      <td>{{ userProfile.email }}</td>
-    </tr>
-    <tr>
-      <th scope="row">E-mail verified</th>
-      <td>{{ userProfile.emailVerified ? 'Yes' : 'No' }}</td>
-    </tr>
-    <tr *ngIf="token">
-      <th scope="row">Token</th>
-      <td>{{ token }}</td>
-    </tr>
-  </table>
-  <ng-template pTemplate="footer">
-    Footer content here
-  </ng-template>
-</p-card>
-
-
+      <p-carousel [value]="profile.latestCourses" [numVisible]="1" [numScroll]="1" [circular]="true" [responsiveOptions]="responsiveOptions">
+        <ng-template pTemplate="header">
+          <h5>Últimos cursos</h5>
+        </ng-template>
+        <ng-template let-course pTemplate="item">
+          <div class="product-item">
+            <div class="product-item-content">
+              <div class="mb-3">
+                <img [src]="server + '/files/courses/'+ course.courseCategoryUuid + '/' + course.uuid + '/' + course.pathOfImageThumb" alt="Image" class="product-image" />
+              </div>
+              <div>
+                <h4 class="mb-1">{{course.name}}</h4>
+                <h6 class="mt-0 mb-3">{{course.endDate | date: 'MM/yyyy'}}</h6>
+<!--                <span>Duração: {{course.duration > 0.9 ? course.duration + ' horas' : course.duration * 100 + ' minutos'}}</span>-->
+                <p-tag [value]="course.duration > 0.9 ? course.duration + ' hora(s)' : course.duration * 100 + ' minutos'" icon="pi pi-clock"></p-tag>
+                <div class="car-buttons mt-5">
+                  <p-button type="button" styleClass="p-button p-button-rounded mr-2" icon="pi pi-search"></p-button>
+                  <p-button type="button" styleClass="p-button-success p-button-rounded mr-2" icon="pi pi-star-fill"></p-button>
+                  <p-button type="button" styleClass="p-button-help p-button-rounded" icon="pi pi-cog"></p-button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </p-carousel>
+    </div>
+    <div class="sm:col-12 md:col-4">6</div>
+    <div class="sm:col-12 md:col-4">6</div>
+  </div>
+</div>

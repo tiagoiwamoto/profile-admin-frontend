@@ -2,10 +2,15 @@
 // `ng build` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+// export const environment = {
+//   production: false,
+//   server: 'http://127.0.0.1:8081',
+//   keycloakUrl: 'http://127.0.0.1:28080'
+// };
 export const environment = {
-  production: false,
-  server: 'http://127.0.0.1:8081',
-  keycloakUrl: 'http://127.0.0.1:28080'
+  production: true,
+  server: 'https://kamehouse.com.br:8081',
+  keycloakUrl: 'https://kamehouse.com.br:8443'
 };
 
 /*

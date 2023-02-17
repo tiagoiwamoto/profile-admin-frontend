@@ -4,6 +4,7 @@ import {ConfirmationService, MessageService} from "primeng/api";
 import {AbstractService} from "../service/abstract.service";
 import {environment} from "../../environments/environment";
 import {FileUpload} from "primeng/fileupload";
+import {Table} from "primeng/table";
 
 @Injectable({
   providedIn: 'root'

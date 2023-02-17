@@ -2,13 +2,21 @@
   <p-progressSpinner></p-progressSpinner>
   <p>Carregando...</p>
 </div>
-<p-table *ngIf="!loadingPage" [value]="records">
+<p-table #table *ngIf="!loadingPage" [value]="records" dataKey="id"
+         [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50]" [loading]="loadingPage"
+         [paginator]="true" currentPageReportTemplate="Mostrando registro {first} até {last} de {totalRecords} registros"
+         [globalFilterFields]="['name','description']">
   <ng-template pTemplate="caption">
     <div class="flex align-items-center justify-content-between">
       Softwares
       <div class="p-toolbar-group-right">
         <p-button (click)="createNewRecord()" icon="pi pi-plus"></p-button>
         <p-button (click)="loadReloadRecords()" class="ml-2" icon="pi pi-refresh"></p-button>
+        <button pButton label="Clear" class="p-button-outlined ml-2" icon="pi pi-filter-slash" (click)="clear(table)"></button>
+        <span class="p-input-icon-left ml-2">
+          <i class="pi pi-search"></i>
+          <input pInputText type="text" [(ngModel)]="search" (input)="table.filterGlobal(search, 'contains')" placeholder="Search keyword" />
+        </span>
       </div>
 
     </div>
@@ -31,7 +39,7 @@
           <p-button label="Excluir" (click)="deleteRecord(software)" class="ml-2" icon="pi pi-trash" styleClass="p-button-sm p-button-danger"></p-button>
         </div>
       </td>
-      <td><img [src]="server + '/files/softwares/'+ software.uuid + '/' + software.pathOfImageThumb" width="100" class="shadow-4" /></td>
+      <td><p-image [src]="server + '/files/softwares/'+ software.uuid + '/' + software.pathOfImage" alt="Image" width="100" [preview]="true"></p-image></td>
       <td>{{software.name}}</td>
       <td><a [href]="software.url" target="_blank" pButton pRipple class="p-button-link">URL</a></td>
       <td><a [href]="software.mirrorUrl" target="_blank" pButton pRipple class="p-button-link">URL</a></td>
@@ -73,7 +81,7 @@
       <input id="mirrorUrl" type="text" style="width: 100%" aria-describedby="mirrorUrl-help" pInputText [(ngModel)]="record.mirrorUrl" />
     </div>
     <p-fileUpload #fileUpload name="file" (onSelect)="setFile($event, fileUpload)"
-                  accept="image/*" [maxFileSize]="1000000" [showUploadButton]="false" [showCancelButton]="false" [chooseLabel]="'Selecionar arquivo'">
+                  accept="image/*" [maxFileSize]="10000000" [showUploadButton]="false" [showCancelButton]="false" [chooseLabel]="'Selecionar arquivo'">
       <ng-template pTemplate="content">
         <img *ngIf="record.id" [src]="server + '/files/softwares/'+ record.uuid + '/' + record.pathOfImageThumb" height="80" />
         <ul *ngIf="file?.target?.length">

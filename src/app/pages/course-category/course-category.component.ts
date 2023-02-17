@@ -21,6 +21,9 @@ export class CourseCategoryComponent extends AbstractUsecase<CourseCategoryInter
 
   async ngOnInit(): Promise<void> {
     await this.loadReloadRecords();
+    // @ts-ignore
+    // this.records.sort((a, b) => (a.name < b.name ? -1 : 1))
+    // await this.records.sort((a, b) => a.name.localeCompare(b.name));
   }
 
 }

@@ -3,6 +3,7 @@ import {ConfirmationService, MessageService} from "primeng/api";
 import {AbstractService} from "../service/abstract.service";
 import {ErrorResponseDtoInterface} from "../model/error-response-dto.interface";
 import {FormGroup, ValidationErrors} from "@angular/forms";
+import {Table} from "primeng/table";
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,7 @@ export class AbstractUsecase<T> {
   formDisplay = false;
   path: string | any;
   form: FormGroup | any;
+  search = '';
 
   constructor(protected confirmationService: ConfirmationService,
               protected messageService: MessageService,
@@ -39,6 +41,7 @@ export class AbstractUsecase<T> {
     await this.service.loadReloadRecords(this.path).subscribe({
       next: (data) => {
         this.records = data;
+        this.records.reverse();
         this.loadingPage = false;
       },
       error: (error) => this.responseError = error
@@ -58,7 +61,6 @@ export class AbstractUsecase<T> {
         this.loadingDialog = false;
       },
       error: (error) => {
-        debugger;
         this.responseError = error;
         this.responseError.messages.forEach((message: any) => {
           this.messageService.add({severity: 'error', summary: 'Aviso', detail: message, life: 10000, closable: true})
@@ -91,5 +93,9 @@ export class AbstractUsecase<T> {
     }else{
       this.formDisplay = true;
     }
+  }
+
+  clear(table: Table) {
+    table.clear();
   }
 }
