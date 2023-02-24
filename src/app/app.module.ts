@@ -45,6 +45,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {environment} from "../environments/environment";
 import {ImageModule} from "primeng/image";
 import {CarouselModule} from "primeng/carousel";
+import {ChartModule} from "primeng/chart";
 
 function initializeKeycloak(keycloak: KeycloakService) {
 
@@ -110,7 +111,8 @@ function initializeKeycloak(keycloak: KeycloakService) {
     ReactiveFormsModule,
     FontAwesomeModule,
     ImageModule,
-    CarouselModule
+    CarouselModule,
+    ChartModule
   ],
   providers: [
     {

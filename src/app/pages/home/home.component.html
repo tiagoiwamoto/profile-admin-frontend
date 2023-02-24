@@ -15,7 +15,9 @@
           <div class="product-item">
             <div class="product-item-content">
               <div class="mb-3">
-                <img [src]="server + '/files/courses/'+ course.courseCategoryUuid + '/' + course.uuid + '/' + course.pathOfImageThumb" alt="Image" class="product-image" />
+                <img [src]="server + '/files/courses/'+ course.courseCategoryUuid + '/' + course.uuid + '/' + course.pathOfImageThumb"
+                     (click)="showImage(server + '/files/courses/'+ course.courseCategoryUuid + '/' + course.uuid + '/' + course.pathOfImage)"
+                     alt="Image" class="product-image" />
               </div>
               <div>
                 <h4 class="mb-1">{{course.name}}</h4>
@@ -33,7 +35,18 @@
         </ng-template>
       </p-carousel>
     </div>
-    <div class="sm:col-12 md:col-4">6</div>
+    <div class="sm:col-12 md:col-4">
+      <h4>Últimos cursos</h4>
+<!--      <p-chart type="pie" [data]="data" [options]="chartOptions"  [style]="{'width': '20%'}"></p-chart>-->
+      <p-messages [(value)]="msgs1" [enableService]="false" [closable]="false"></p-messages>
+    </div>
     <div class="sm:col-12 md:col-4">6</div>
   </div>
 </div>
+<p-dialog header="Certificado" [(visible)]="showModalImage" [modal]="true" [style]="{width: '50vw'}"
+          [draggable]="false" [resizable]="false">
+  <img [src]="imageToShow" alt="Image" class="product-image" width="100%" />
+  <ng-template pTemplate="footer">
+    <p-button icon="pi pi-check" (click)="showModalImage=false" label="Ok" styleClass="p-button-text"></p-button>
+  </ng-template>
+</p-dialog>
